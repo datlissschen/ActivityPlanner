@@ -1,5 +1,6 @@
 package com.datlisschen.activityplanner.model.entity;
 
+import com.datlisschen.activityplanner.model.constant.WheatherType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,11 @@ public class ActivityIdea {
 
     private String photoPath;
     private LocalDate preciseDate;
+
+    @ElementCollection(targetClass = WheatherType.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "activity_weather", joinColumns = @JoinColumn(name = "activity_id"))
+    private Set<WheatherType> recommendedWeather;
 
     @ManyToMany
     @JoinTable(
