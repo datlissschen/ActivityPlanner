@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$CONTENT_TITLE">Activity Planner</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+<div class="container-1080p">
+    <div layout:fragment="page-header"></div>
+
+    <main>
+        <div layout:fragment="page-content"></div>
+    </main>
+
+    <footer>
+        <div layout:fragment="page-footer"></div>
+    </footer>
+</div>
+</body>
+</html>
