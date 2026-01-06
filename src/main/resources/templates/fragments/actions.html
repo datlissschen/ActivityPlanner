@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="bottom-buttons" class="action-bar">
+
+    <button class="pill-btn">
+        <span class="btn-icon">⊕</span> Add Idea
+    </button>
+
+    <button class="pill-btn">
+        <span class="btn-icon">⊕</span> Add Period
+    </button>
+
+    <button class="pill-btn">
+        <img th:src="@{/images/icon-calendar-check.png}" class="calendar-icon" alt="calendar">
+        Period Overview
+    </button>
+
+    <button class="pill-btn">
+        <span class="btn-icon">🔎</span> Search
+    </button>
+
+</div>
+
+</body>
+</html>

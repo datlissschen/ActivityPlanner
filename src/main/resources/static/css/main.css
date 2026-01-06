@@ -1,0 +1,342 @@
+/* --- CSS Variables & Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+:root {
+    --font-hand: 'Patrick Hand', cursive, sans-serif;
+    --color-paper: #f4eddf; /* Approximate cream color from image */
+    --color-ink: #333333;
+    --color-blue-banner: #a2b8c9;
+    --color-green-card: #caddb8;
+    --color-blue-card: #dcf1f7;
+    --color-pink-card: #f7d2d2;
+    --color-btn-gray: #d0d0d0;
+}
+main {
+    flex-grow: 1;            /* Pushes the footer down */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.cards-container {
+    display: flex;           /* Switch back to flex for centered cards */
+    flex-wrap: wrap;         /* Allows cards to move to the next line on laptops */
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+}
+
+/* --- Header Wrapper to handle alignment --- */
+.header-wrapper {
+    display: flex;
+    align-items: center; /* Vertically aligns the emoji with the middle of the banner */
+    justify-content: flex-start;
+    gap: 10px;           /* Minimal space between the banner and emoji */
+    margin-left: 5%;     /* Moves the whole group to the left side */
+    width: fit-content;  /* Ensures the 'gap' doesn't stretch */
+}
+
+.summer-header {
+    position: relative; /* This is crucial! It tells the sticker to stay inside these walls */
+    width: fit-content;
+    min-width: 450px;
+    margin: 40px auto 40px 10%;
+    padding: 35px 50px;
+    background-color: var(--color-blue-card);
+    border: 3px solid var(--color-ink);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    z-index: 2;
+}
+
+/* --- The sticker pinned to the top-left --- */
+.weather-float {
+    position: absolute; /* Changes it from 'floating next to' to 'pinned inside' */
+    top: 5px;         /* Nudges it slightly ABOVE the banner edge */
+    left: 5px;        /* Nudges it slightly to the LEFT of the banner edge */
+
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 2px dashed var(--color-ink);
+    border-radius: 50%;
+    z-index: 10;        /* Ensures it sits on top of the banner and the 'tape' accent */
+
+    /* Animation stays the same */
+    animation: floating 4s ease-in-out infinite, wobble 6s ease-in-out infinite;
+}
+
+.weather-emoji {
+    font-size: 2.2rem;         /* Scaled down to fit the smaller 60px circle */
+    display: block;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.05));
+}
+
+/* Gentle up and down floating */
+@keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Organic wobbling/rotation */
+@keyframes wobble {
+    0%, 100% { transform: rotate(-2deg); }
+    33% { transform: rotate(3deg); }
+    66% { transform: rotate(-1deg); }
+}
+
+/* --- Base Reset & Background Reusability --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-hand);
+    color: var(--color-ink);
+    /* This background will now appear on EVERY page that uses the layout */
+    background: url('../images/paper-bg.png') no-repeat center center fixed;
+    background-size: cover;
+    /* Ensure it fits 1920x1080 screens well */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.container-1080p {
+    width: 95%;            /* Use most of the screen width */
+    max-width: 1800px;     /* Prevents it from becoming too wide on huge monitors */
+    min-height: 90vh;      /* Takes up 90% of the vertical space */
+    margin: 0 auto;        /* Centers the container */
+    position: relative;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes content and footer apart */
+}
+
+/* --- Utility Classes --- */
+.hand-drawn-btn {
+    font-family: var(--font-hand);
+    background: var(--color-btn-gray);
+    border: 2px solid var(--color-ink);
+    border-radius: 30px;
+    padding: 0.8rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    transition: transform 0.1s;
+}
+
+.hand-drawn-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+/* --- Decorations --- */
+.deco-compass {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 120px;
+}
+
+.deco-scrollbar {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 600px;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding-bottom: 30px;
+    /* Ensure buttons are above decorations */
+    position: relative;
+    z-index: 10;
+}
+
+/* --- The Hand-Drawn Activity Cards --- */
+.idea-card {
+    position: relative;
+    width: 380px;
+    height: 280px;
+    padding: 80px 30px 30px;
+    border: 3px solid var(--color-ink);
+    /* This specific syntax creates the 'blob' or organic paper shape */
+    border-radius: 20px 80px 30px 90px / 60px 25px 80px 30px;
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.08);
+    background-color: white; /* Fallback */
+    transition: transform 0.2s ease-in-out;
+}
+
+.idea-card:hover {
+    transform: rotate(-1deg) scale(1.02);
+}
+
+/* Specific Card Colors */
+.card-green { background-color: var(--color-green-card); }
+.card-blue  { background-color: var(--color-blue-card); }
+.card-pink  { background-color: var(--color-pink-card); }
+
+/* Card Content Styling */
+.idea-card p {
+    font-size: 1.4rem;
+    line-height: 1.3;
+    color: var(--color-ink);
+}
+
+/* --- Individual Card Styling --- */
+.idea-card {
+    position: relative;
+    width: 350px;
+    height: 250px;
+    padding: 80px 30px 30px; /* Extra top padding for the icon area */
+    border: 3px solid var(--color-ink);
+    border-radius: 20px 40px 30px 20px; /* Irregular hand-drawn corners */
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+/* Specific card backgrounds based on your design */
+.card-green { background: var(--color-green-card); }
+.card-blue  { background: var(--color-blue-card); }
+.card-pink  { background: var(--color-pink-card); }
+
+/* The main icon sitting on top of the card */
+.card-main-icon {
+    position: absolute;
+    top: -60px; /* Pulls it above the card boundary */
+    left: 30px;
+    width: 100px;
+    filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.1));
+}
+
+/* The calendar check button on the top right */
+.card-check-btn {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    width: 60px;
+    height: auto;
+    z-index: 5;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.card-check-btn:hover { transform: scale(1.1); }
+
+/* --- Footer Action Bar --- */
+footer {
+    width: 100%;
+    padding-bottom: 40px; /* Space from the very bottom */
+}
+
+.action-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px; /* Space between buttons */
+}
+
+/* --- Pill Buttons --- */
+.pill-btn {
+    font-family: var(--font-hand);
+    font-size: 1.8rem;
+    background-color: #d6d2c4; /* Light beige/gray from design */
+    border: 3px solid var(--color-ink);
+    border-radius: 50px; /* Makes it a pill shape */
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+    transition: all 0.1s ease;
+}
+
+.pill-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
+}
+
+.pill-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+/* Icon styling inside buttons */
+.btn-icon {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Calendar icon specific sizing */
+.calendar-icon {
+    width: 30px;
+    height: auto;
+}
+
+/* --- The Blue Header Banner Fix --- */
+/* --- Positioning the Banner to the Left --- */
+.summer-header {
+    position: relative;
+    width: fit-content;
+    min-width: 450px;
+
+    /* Change 'auto' for the left margin to a specific value */
+    /* top | right | bottom | left */
+    margin: 40px auto 40px 15%;
+
+    padding: 35px 50px;
+    background-color: var(--color-blue-card);
+    border: 3px solid var(--color-ink);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
+    z-index: 2;
+}
+
+/* The dark blue 'tape' accent fix */
+.summer-header::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;              /* Responsive width for the tape */
+    height: 35px;
+    background: var(--color-blue-banner);
+    border: 2px solid var(--color-ink);
+    border-radius: 5px 10px 5px 10px / 10px 5px 10px 5px;
+}
+
+.banner-text {
+    text-align: center;
+}
+
+.banner-text h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-top: 5px;
+}
+
+.banner-text h2 {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    color: #556b7f;
+}

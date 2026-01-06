@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<body>
+<header layout:fragment="page-header">
+    <div class="summer-header">
+        <div class="weather-float">
+            <span class="weather-emoji">🌤️</span>
+        </div>
+
+        <div class="banner-text">
+            <h2>Active Adventure:</h2>
+            <h1>Summer Mornings</h1>
+        </div>
+    </div>
+</header>
+
+<div layout:fragment="page-content" class="cards-container">
+    <div class="idea-card card-green">
+        <img th:src="@{/images/icon-calendar-check.png}" class="card-check-btn" alt="check">
+        <div class="card-icon">🥾</div>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+
+</div>
+
+<div layout:fragment="page-footer">
+    <div th:replace="~{fragments/actions :: bottom-buttons}"></div>
+</div>
+
+</body>
+</html>
