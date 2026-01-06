@@ -1,6 +1,6 @@
 package com.datlisschen.activityplanner.model.entity;
 
-import com.datlisschen.activityplanner.model.constant.WheatherType;
+import com.datlisschen.activityplanner.model.constant.WeatherType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +30,8 @@ public class Expedition {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @ElementCollection(targetClass = WheatherType.class)
+    @ElementCollection(targetClass = WeatherType.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "expedition_weather", joinColumns = @JoinColumn(name = "expedition_id"))
-    private Set<WheatherType> typicalWeather;
+    private Set<WeatherType> typicalWeather;
 }

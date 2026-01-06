@@ -3,15 +3,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <body>
+
 <header layout:fragment="page-header">
     <div class="summer-header">
         <div class="weather-float">
             <span class="weather-emoji">🌤️</span>
         </div>
 
-        <div class="banner-text">
+        <div class="banner-text" th:if="${not #lists.isEmpty(expeditions)}">
             <h2>Active Adventure:</h2>
-            <h1>Summer Mornings</h1>
+            <h1 th:text="${expeditions[0].name}">Summer Mornings</h1>
+            <p th:text="${expeditions[0].startDate} + ' to ' + ${expeditions[0].endDate}"></p>
         </div>
     </div>
 </header>
