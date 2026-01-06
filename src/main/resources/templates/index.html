@@ -3,14 +3,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <body>
+<header layout:fragment="page-header">
+    <div class="summer-header">
+        <div class="weather-float">
+            <span class="weather-emoji">🌤️</span>
+        </div>
 
-<div layout:fragment="page-header" class="summer-header">
-    <div class="banner-text">
-        <h2>Active Adventure:</h2>
-        <h1>Summer Mornings</h1>
+        <div class="banner-text">
+            <h2>Active Adventure:</h2>
+            <h1>Summer Mornings</h1>
+        </div>
     </div>
-    <p class="weather-text">Sunny weather</p>
-</div>
+</header>
 
 <div layout:fragment="page-content" class="cards-container">
     <div class="idea-card card-green">

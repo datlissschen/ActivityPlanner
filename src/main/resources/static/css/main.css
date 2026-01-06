@@ -27,6 +27,67 @@ main {
     width: 100%;
 }
 
+/* --- Header Wrapper to handle alignment --- */
+.header-wrapper {
+    display: flex;
+    align-items: center; /* Vertically aligns the emoji with the middle of the banner */
+    justify-content: flex-start;
+    gap: 10px;           /* Minimal space between the banner and emoji */
+    margin-left: 5%;     /* Moves the whole group to the left side */
+    width: fit-content;  /* Ensures the 'gap' doesn't stretch */
+}
+
+.summer-header {
+    position: relative; /* This is crucial! It tells the sticker to stay inside these walls */
+    width: fit-content;
+    min-width: 450px;
+    margin: 40px auto 40px 10%;
+    padding: 35px 50px;
+    background-color: var(--color-blue-card);
+    border: 3px solid var(--color-ink);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    z-index: 2;
+}
+
+/* --- The sticker pinned to the top-left --- */
+.weather-float {
+    position: absolute; /* Changes it from 'floating next to' to 'pinned inside' */
+    top: 5px;         /* Nudges it slightly ABOVE the banner edge */
+    left: 5px;        /* Nudges it slightly to the LEFT of the banner edge */
+
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 2px dashed var(--color-ink);
+    border-radius: 50%;
+    z-index: 10;        /* Ensures it sits on top of the banner and the 'tape' accent */
+
+    /* Animation stays the same */
+    animation: floating 4s ease-in-out infinite, wobble 6s ease-in-out infinite;
+}
+
+.weather-emoji {
+    font-size: 2.2rem;         /* Scaled down to fit the smaller 60px circle */
+    display: block;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.05));
+}
+
+/* Gentle up and down floating */
+@keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Organic wobbling/rotation */
+@keyframes wobble {
+    0%, 100% { transform: rotate(-2deg); }
+    33% { transform: rotate(3deg); }
+    66% { transform: rotate(-1deg); }
+}
+
 /* --- Base Reset & Background Reusability --- */
 * {
     margin: 0;
@@ -135,14 +196,6 @@ body {
     font-size: 1.4rem;
     line-height: 1.3;
     color: var(--color-ink);
-}
-
-.header-weather {
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
 }
 
 /* --- Individual Card Styling --- */
