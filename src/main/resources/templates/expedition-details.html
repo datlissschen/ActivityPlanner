@@ -13,40 +13,46 @@
 
             <div class="input-group">
                 <label>Expedition Name:</label>
-                <input type="text" th:field="*{name}" required />
+                <label>
+                    <input type="text" th:field="*{name}" required />
+                </label>
             </div>
 
             <div class="row">
                 <div class="input-group">
                     <label>Start Date:</label>
-                    <input type="date"
-                           th:value="${expedition.startDate}"
-                           name="startDate"
-                           id="startDate"
-                           required />
+                    <label for="startDate"></label><input type="date"
+                                                          th:value="${expedition.startDate}"
+                                                          name="startDate"
+                                                          id="startDate"
+                                                          required />
                 </div>
                 <div class="input-group">
                     <label>End Date:</label>
-                    <input type="date"
-                           th:value="${expedition.endDate}"
-                           name="endDate"
-                           id="endDate"
-                           required />
+                    <label for="endDate"></label><input type="date"
+                                                        th:value="${expedition.endDate}"
+                                                        name="endDate"
+                                                        id="endDate"
+                                                        required />
                 </div>
             </div>
 
             <div class="input-group">
                 <label>Expedition Description:</label>
-                <textarea th:field="*{expeditionDescription}"
-                          placeholder="Tell the story of this adventure..."
-                          rows="5"></textarea>
+                <label>
+<textarea th:field="*{expeditionDescription}"
+          placeholder="Tell the story of this adventure..."
+          rows="5"></textarea>
+                </label>
             </div>
 
             <div class="input-group">
                 <label>Weather Summary:</label>
                 <div class="weather-grid">
                     <div th:each="type : ${weatherTypes}" class="weather-option">
-                        <input type="checkbox" th:field="*{typicalWeather}" th:value="${type}" th:id="${type}" />
+                        <label>
+                            <input type="checkbox" th:field="*{typicalWeather}" th:value="${type}" th:id="${type}" />
+                        </label>
                         <label th:for="${type}" th:text="${type.emoji + ' ' + type.displayName}"></label>
                     </div>
                 </div>
