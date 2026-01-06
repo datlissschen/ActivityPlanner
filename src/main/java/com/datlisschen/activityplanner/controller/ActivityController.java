@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collections;
@@ -44,6 +45,21 @@ public class ActivityController {
     public String saveExpedition(@ModelAttribute Expedition expedition) {
         expeditionService.saveExpedition(expedition);
         return "redirect:/"; // Go back to the main scrapbook page
+    }
+
+    @GetMapping("/expedition/overview/{id}")
+    public String showExpeditionOverview(@PathVariable Long id, Model model) {
+        // Find the specific expedition by ID
+        Expedition expedition = expeditionService.getExpeditionById(id);
+        model.addAttribute("expedition", expedition);
+        model.addAttribute("weatherTypes", WeatherType.values());
+        return "expedition-details"; // We will create this new template
+    }
+
+    @PostMapping("/expedition/delete/{id}")
+    public String deleteExpedition(@PathVariable Long id) {
+        expeditionService.deleteExpedition(id);
+        return "redirect:/"; // Go back to empty dashboard
     }
 }
 

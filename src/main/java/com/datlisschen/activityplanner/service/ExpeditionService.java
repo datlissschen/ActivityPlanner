@@ -9,6 +9,7 @@ import java.util.List;
 public class ExpeditionService {
 
     private final ExpeditionRepository expeditionRepository;
+
     public ExpeditionService(ExpeditionRepository expeditionRepository) {
         this.expeditionRepository = expeditionRepository;
     }
@@ -17,7 +18,16 @@ public class ExpeditionService {
         return expeditionRepository.findAll();
     }
 
+    public Expedition getExpeditionById(Long id) {
+        return expeditionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expedition not found with id: " + id));
+    }
+
     public void saveExpedition(Expedition expedition) {
         expeditionRepository.save(expedition);
+    }
+
+    public void deleteExpedition(Long id) {
+        expeditionRepository.deleteById(id);
     }
 }

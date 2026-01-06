@@ -19,6 +19,15 @@ main {
     padding: 40px 0;
 }
 
+/* Remove default link styling from the banner */
+.banner-link {
+    text-decoration: none;
+    color: inherit; /* Keeps the ink color we set earlier */
+    display: block;
+    width: fit-content;
+}
+
+
 .cards-container {
     display: flex;           /* Switch back to flex for centered cards */
     flex-wrap: wrap;         /* Allows cards to move to the next line on laptops */
@@ -35,18 +44,6 @@ main {
     gap: 10px;           /* Minimal space between the banner and emoji */
     margin-left: 5%;     /* Moves the whole group to the left side */
     width: fit-content;  /* Ensures the 'gap' doesn't stretch */
-}
-
-.summer-header {
-    position: relative; /* This is crucial! It tells the sticker to stay inside these walls */
-    width: fit-content;
-    min-width: 450px;
-    margin: 40px auto 40px 10%;
-    padding: 35px 50px;
-    background-color: var(--color-blue-card);
-    border: 3px solid var(--color-ink);
-    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-    z-index: 2;
 }
 
 /* --- The sticker pinned to the top-left --- */
@@ -294,23 +291,23 @@ footer {
     height: auto;
 }
 
-/* --- The Blue Header Banner Fix --- */
-/* --- Positioning the Banner to the Left --- */
+/* --- Banner to the Left --- */
 .summer-header {
     position: relative;
     width: fit-content;
     min-width: 450px;
-
-    /* Change 'auto' for the left margin to a specific value */
-    /* top | right | bottom | left */
-    margin: 40px auto 40px 15%;
-
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     padding: 35px 50px;
     background-color: var(--color-blue-card);
     border: 3px solid var(--color-ink);
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-    box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
     z-index: 2;
+    /* Change 'auto' for the left margin to a specific value */
+    /* top | right | bottom | left */
+    margin: 40px auto 40px 15%;
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
 }
 
 /* The dark blue 'tape' accent fix */
@@ -327,6 +324,15 @@ footer {
     border-radius: 5px 10px 5px 10px / 10px 5px 10px 5px;
 }
 
+/* Give it a slight 'lift' when hovered */
+.summer-header:hover {
+    transform: scale(1.02) rotate(-1deg);
+    box-shadow: 12px 15px 0 rgba(0,0,0,0.08);
+}
+
+.summer-header:active {
+    transform: scale(0.98);
+}
 .banner-text {
     text-align: center;
 }
@@ -403,4 +409,16 @@ footer {
 .input-group textarea:focus {
     background: rgba(255, 255, 255, 0.5);
     border-style: solid;
+}
+
+.delete-btn {
+    background-color: #ffb3b3; /* Soft red sticker color */
+    border-color: #cc0000;
+    color: #800000;
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+.delete-btn:hover {
+    background-color: #ff8080;
 }
