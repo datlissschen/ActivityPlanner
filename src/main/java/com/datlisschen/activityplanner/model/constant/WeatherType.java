@@ -1,8 +1,8 @@
 package com.datlisschen.activityplanner.model.constant;
-
 import lombok.Getter;
 
-public enum WheatherType {
+@Getter
+public enum WeatherType {
     SUNNY("Sunny", "☀️"),
     PARTLY_CLOUDY("Partly Cloudy", "⛅"),
     THUNDERSTORMS("Thunderstorms", "🌩️"),
@@ -15,7 +15,7 @@ public enum WheatherType {
     private final String displayName;
     private final String emoji;
 
-    WheatherType(String displayName, String emoji) {
+    WeatherType(String displayName, String emoji) {
         this.displayName = displayName;
         this.emoji = emoji;
     }

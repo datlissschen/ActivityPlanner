@@ -17,7 +17,7 @@ public class ExpeditionService {
         return expeditionRepository.findAll();
     }
 
-    public Expedition saveExpedition(Expedition expedition) {
-        return expeditionRepository.save(expedition); // add logic that the end date can not be before the start date
+    public void saveExpedition(Expedition expedition) {
+        expeditionRepository.save(expedition);
     }
 }

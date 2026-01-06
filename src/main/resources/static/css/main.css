@@ -340,3 +340,67 @@ footer {
     font-size: clamp(1.2rem, 2vw, 1.8rem);
     color: #556b7f;
 }
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.form-paper {
+    background: var(--color-blue-card); /* Soft blue theme for periods */
+    border: 3px solid var(--color-ink);
+    border-radius: 15px 50px 30px 5px / 50px 15px 5px 30px;
+    padding: 40px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 10px 10px 0 rgba(0,0,0,0.05);
+}
+
+.input-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.input-group input[type="text"],
+.input-group input[type="date"] {
+    font-family: var(--font-hand);
+    font-size: 1.2rem;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px dashed var(--color-ink);
+    outline: none;
+}
+
+.weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.weather-option label {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.input-group textarea {
+    font-family: var(--font-hand);
+    font-size: 1.2rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.3); /* Slight overlay look */
+    border: 2px dashed var(--color-ink);
+    border-radius: 10px;
+    outline: none;
+    resize: vertical; /* Allows user to stretch it downwards */
+}
+
+.input-group textarea:focus {
+    background: rgba(255, 255, 255, 0.5);
+    border-style: solid;
+}
