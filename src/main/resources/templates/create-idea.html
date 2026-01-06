@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="de">
+<body>
+
+<div layout:fragment="page-content" class="form-container">
+    <div class="form-paper pink-paper"> <h1 class="hand-drawn-title">Add a New Activity Idea</h1>
+
+        <form th:action="@{/idea/save}" th:object="${idea}" method="post" enctype="multipart/form-data">
+
+            <div class="input-group">
+                <label>Title:</label>
+                <label>
+                    <input type="text" th:field="*{title}" placeholder="e.g., Midnight Hike" required />
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Place/Location:</label>
+                    <label>
+                        <input type="text" th:field="*{place}" placeholder="e.g., Black Forest" />
+                    </label>
+                </div>
+                <div class="input-group">
+                    <label>Precise Date (Optional):</label>
+                    <label>
+                        <input type="date" th:field="*{preciseDate}" />
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Description:</label>
+                <label>
+                    <textarea th:field="*{description}" placeholder="What is the plan?" rows="4"></textarea>
+                </label>
+            </div>
+
+            <div class="input-group">
+                <label>Belongs to Expeditions:</label>
+                <div class="station-selector">
+                    <div th:each="exp : ${belonging}" class="station-checkbox">
+                        <label>
+                            <input type="checkbox" th:field="*{expeditions}" th:value="${exp.id}" th:id="'exp-' + ${exp.id}" />
+                        </label>
+                        <label th:for="'exp-' + ${exp.id}" th:text="${exp.name}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Upload a Photo:</label>
+                <input type="file" name="photoFile" class="file-input" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="pill-btn">✨ Add Idea</button>
+                <a th:href="@{/}" class="pill-btn secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

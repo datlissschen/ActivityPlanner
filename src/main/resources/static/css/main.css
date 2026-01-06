@@ -422,3 +422,30 @@ footer {
 .delete-btn:hover {
     background-color: #ff8080;
 }
+
+.pink-paper {
+    background-color: #fff0f3; /* Soft pink for idea cards */
+    border-color: var(--color-ink);
+}
+
+.station-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px dashed var(--color-ink);
+    border-radius: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.station-checkbox label {
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.file-input {
+    font-family: var(--font-hand);
+    margin-top: 10px;
+}

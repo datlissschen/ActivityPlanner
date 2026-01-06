@@ -4,9 +4,9 @@
 
 <div th:fragment="bottom-buttons" class="action-bar">
 
-    <button class="pill-btn">
+    <a th:href="@{/idea/new}" class="pill-btn">
         <span class="btn-icon">⊕</span> Add Idea
-    </button>
+    </a>
 
     <a th:href="@{/expedition/new}" class="pill-btn">
         <span class="btn-icon">⊕</span> Add Period

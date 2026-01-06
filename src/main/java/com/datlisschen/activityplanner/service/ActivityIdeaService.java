@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 @Service
 public class ActivityIdeaService {
 
@@ -21,16 +20,20 @@ public class ActivityIdeaService {
 
     @Transactional
     public ActivityIdea createActivityWithStations(ActivityIdea idea, Set<Expedition> stations) {
-        // Logic to link the activity to multiple 'stations' (Expeditions)
         idea.getExpeditions().addAll(stations);
         return activityIdeaRepository.save(idea);
     }
 
     public List<ActivityIdea> getIdeasByExpedition(Long expeditionId) {
-        // Logic to find all cards belonging to a specific station
         return activityIdeaRepository.findAll().stream()
                 .filter(idea -> idea.getExpeditions().stream()
-                        .anyMatch(exp -> Objects.equals(exp.getId(),expeditionId)))
+                        .anyMatch(exp -> Objects.equals(exp.getId(), expeditionId)))
                 .toList();
     }
+
+    public void saveIdea(ActivityIdea idea) {
+        activityIdeaRepository.save(idea);
+    }
+
+
 }

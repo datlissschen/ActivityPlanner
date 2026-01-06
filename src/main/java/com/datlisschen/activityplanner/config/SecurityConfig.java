@@ -1,24 +1,34 @@
 package com.datlisschen.activityplanner.config;
 
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // This allows everyone to see every page
+                        .requestMatchers("/", "/css/**", "/images/**", "/js/**").permitAll()
+                        .requestMatchers("/expedition/**").permitAll()
+                        .requestMatchers("/idea/**").permitAll() // Added this
+                        .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable())    // Disables CSRF for easier development
-                .headers(headers -> headers.frameOptions(frame -> frame.disable())); // Allows H2 console to work
+                .formLogin(Customizer.withDefaults()); // Standard Spring 6+ syntax
 
         return http.build();
+    }
+
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
 }

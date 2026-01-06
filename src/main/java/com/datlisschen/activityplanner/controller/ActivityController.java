@@ -1,5 +1,6 @@
 package com.datlisschen.activityplanner.controller;
 
+import com.datlisschen.activityplanner.model.entity.ActivityIdea;
 import com.datlisschen.activityplanner.model.entity.Expedition;
 import com.datlisschen.activityplanner.service.ActivityIdeaService;
 import com.datlisschen.activityplanner.service.ExpeditionService;
@@ -60,6 +61,20 @@ public class ActivityController {
     public String deleteExpedition(@PathVariable Long id) {
         expeditionService.deleteExpedition(id);
         return "redirect:/"; // Go back to empty dashboard
+    }
+
+    @GetMapping("/idea/new")
+    public String showCreateIdeaForm(Model model) {
+        model.addAttribute("idea", new ActivityIdea());
+        System.out.println("DEBUG: Entering showCreateIdeaForm");
+        model.addAttribute("expeditions", expeditionService.getAllExpeditions());
+        return "create-idea";
+    }
+
+    @PostMapping("/idea/save")
+    public String saveIdea(@ModelAttribute ActivityIdea idea) {
+        activityService.saveIdea(idea); // Ensure this service method exists
+        return "redirect:/";
     }
 }
 
