@@ -389,3 +389,18 @@ footer {
     font-size: 1.2rem;
     cursor: pointer;
 }
+.input-group textarea {
+    font-family: var(--font-hand);
+    font-size: 1.2rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.3); /* Slight overlay look */
+    border: 2px dashed var(--color-ink);
+    border-radius: 10px;
+    outline: none;
+    resize: vertical; /* Allows user to stretch it downwards */
+}
+
+.input-group textarea:focus {
+    background: rgba(255, 255, 255, 0.5);
+    border-style: solid;
+}

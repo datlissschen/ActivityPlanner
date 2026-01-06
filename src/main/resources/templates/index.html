@@ -4,19 +4,33 @@
       layout:decorate="~{layout/base}">
 <body>
 
-<header layout:fragment="page-header">
-    <div class="summer-header">
+<div layout:fragment="page-header" class="header-wrapper">
+
+    <div th:each="exp, iterStat : ${expeditions}"
+         th:if="${iterStat.first}"
+         class="summer-header">
+
         <div class="weather-float">
-            <span class="weather-emoji">🌤️</span>
+            <span class="weather-emoji"
+                  th:if="${!exp.typicalWeather.isEmpty()}"
+                  th:text="${exp.typicalWeather.iterator().next().emoji}">🌤️</span>
         </div>
 
-        <div class="banner-text" th:if="${not #lists.isEmpty(expeditions)}">
+        <div class="banner-text">
             <h2>Active Adventure:</h2>
-            <h1 th:text="${expeditions[0].name}">Summer Mornings</h1>
-            <p th:text="${expeditions[0].startDate} + ' to ' + ${expeditions[0].endDate}"></p>
+            <h1 th:text="${exp.name}">Summer Mornings</h1>
+            <p th:text="${exp.startDate} + ' to ' + ${exp.endDate}"></p>
         </div>
     </div>
-</header>
+
+    <div th:if="${#lists.isEmpty(expeditions)}" class="summer-header">
+        <div class="banner-text">
+            <h2>Welcome!</h2>
+            <h1>Create your first Expedition</h1>
+        </div>
+    </div>
+
+</div>
 
 <div layout:fragment="page-content" class="cards-container">
     <div class="idea-card card-green">
@@ -33,3 +47,4 @@
 
 </body>
 </html>
+

@@ -20,7 +20,7 @@ public class Expedition {
     private long id;
 
     @Column(nullable = false)
-    private String expeditionName;
+    private String name;
 
     @Column(nullable = false)
     private String expeditionDescription;

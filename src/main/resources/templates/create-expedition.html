@@ -11,7 +11,7 @@
         <form th:action="@{/expedition/save}" th:object="${expedition}" method="post">
             <div class="input-group">
                 <label>Expedition Name:</label>
-                <input type="text" th:field="*{expeditionName}" placeholder="e.g., Winter Mornings" required />
+                <input type="text" th:field="*{name}" placeholder="e.g., Winter Mornings" required />
             </div>
 
             <div class="row">
@@ -23,6 +23,13 @@
                     <label>End Date:</label>
                     <input type="date" th:field="*{endDate}" required />
                 </div>
+            </div>
+
+            <div class="input-group">
+                <label>Expedition Description:</label>
+                <textarea th:field="*{expeditionDescription}"
+                          placeholder="Describe your adventure..."
+                          rows="4"></textarea>
             </div>
 
             <div class="input-group">

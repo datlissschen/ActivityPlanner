@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Collections;
+import java.util.List;
+
 //takes the data from the services and injects them into the Thymelaf HTML
 @Controller
 public class ActivityController {
@@ -22,18 +25,19 @@ public class ActivityController {
         this.expeditionService = expeditionService;
     }
 
-    @GetMapping("/")
-    public String showDashboard(Model model)
-    {
-        model.addAttribute("expeditions", expeditionService.getAllExpeditions());
-        return "index";
-    }
-
     @GetMapping("/expedition/new")
     public String showCreateExpeditionForm(Model model) {
         model.addAttribute("expedition", new Expedition());
         model.addAttribute("weatherTypes", WeatherType.values()); // For the multiple choice weather
         return "create-expedition";
+    }
+
+    @GetMapping("/")
+    public String showDashboard(Model model) {
+        List<Expedition> expeditions = expeditionService.getAllExpeditions();
+        // Use an empty list instead of null to prevent Thymeleaf from panicking
+        model.addAttribute("expeditions", expeditions != null ? expeditions : Collections.emptyList());
+        return "index";
     }
 
     @PostMapping("/expedition/save")

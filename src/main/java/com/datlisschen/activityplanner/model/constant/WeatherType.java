@@ -1,5 +1,7 @@
 package com.datlisschen.activityplanner.model.constant;
+import lombok.Getter;
 
+@Getter
 public enum WeatherType {
     SUNNY("Sunny", "☀️"),
     PARTLY_CLOUDY("Partly Cloudy", "⛅"),
