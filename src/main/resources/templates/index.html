@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
+      layout:decorate="~{layout/base}" lang="de">
 <body>
-
 <div layout:fragment="page-header" class="header-wrapper">
 
-    <div th:each="exp, iterStat : ${expeditions}"
-         th:if="${iterStat.first}"
-         class="summer-header">
+    <a th:if="${not #lists.isEmpty(expeditions)}"
+       th:href="@{/expedition/overview/{id}(id=${expeditions[0].id})}"
+       class="banner-link">
 
-        <div class="weather-float">
-            <span class="weather-emoji"
-                  th:if="${!exp.typicalWeather.isEmpty()}"
-                  th:text="${exp.typicalWeather.iterator().next().emoji}">🌤️</span>
-        </div>
+        <div class="summer-header">
+            <div class="weather-float" th:if="${!expeditions[0].typicalWeather.isEmpty()}">
+                <span class="weather-emoji"
+                      th:text="${expeditions[0].typicalWeather.iterator().next().emoji}">🌤️</span>
+            </div>
 
-        <div class="banner-text">
-            <h2>Active Adventure:</h2>
-            <h1 th:text="${exp.name}">Summer Mornings</h1>
-            <p th:text="${exp.startDate} + ' to ' + ${exp.endDate}"></p>
+            <div class="banner-text">
+                <h2>Active Adventure:</h2>
+                <h1 th:text="${expeditions[0].name}">Summer Mornings</h1>
+                <p th:text="${expeditions[0].startDate} + ' to ' + ${expeditions[0].endDate}"></p>
+            </div>
         </div>
-    </div>
+    </a>
 
     <div th:if="${#lists.isEmpty(expeditions)}" class="summer-header">
         <div class="banner-text">
@@ -29,7 +29,6 @@
             <h1>Create your first Expedition</h1>
         </div>
     </div>
-
 </div>
 
 <div layout:fragment="page-content" class="cards-container">
