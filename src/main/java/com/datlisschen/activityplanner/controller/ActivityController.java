@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,8 +32,28 @@ public class ActivityController {
 
     @GetMapping("/")
     public String showDashboard(Model model) {
+        LocalDate today = LocalDate.now();
         List<Expedition> expeditions = expeditionService.getAllExpeditions();
-        model.addAttribute("expeditions", expeditions != null ? expeditions : Collections.emptyList());
+
+        // 1. Find the current expedition (where today is between start and end)
+        Expedition currentExpedition = expeditions.stream()
+                .filter(e -> (today.isEqual(e.getStartDate()) || today.isAfter(e.getStartDate())) &&
+                        (today.isEqual(e.getEndDate()) || today.isBefore(e.getEndDate())))
+                .findFirst()
+                .orElse(null);
+
+        // 2. Fetch ideas only for that expedition
+        List<ActivityIdea> filteredIdeas;
+        if (currentExpedition != null) {
+            filteredIdeas = activityService.getIdeasByExpedition(currentExpedition.getId());
+        } else {
+            filteredIdeas = Collections.emptyList();
+        }
+
+        model.addAttribute("expeditions", expeditions);
+        model.addAttribute("currentExpedition", currentExpedition);
+        model.addAttribute("ideas", filteredIdeas);
+
         return "index";
     }
 
@@ -67,9 +87,12 @@ public class ActivityController {
     @GetMapping("/idea/new")
     public String showCreateIdeaForm(Model model) {
         model.addAttribute("idea", new ActivityIdea());
+        List<Expedition> expeditions = expeditionService.getAllExpeditions();
+
         model.addAttribute("expeditions", expeditionService.getAllExpeditions());
         return "create-idea";
     }
+
 
     // 3. Combined the two saveIdea methods into one
     @PostMapping("/idea/save")
@@ -86,4 +109,7 @@ public class ActivityController {
         activityService.saveIdea(idea);
         return "redirect:/";
     }
+
+
+
 }

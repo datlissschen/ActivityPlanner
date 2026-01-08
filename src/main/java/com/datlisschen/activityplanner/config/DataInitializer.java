@@ -19,8 +19,11 @@ public class DataInitializer {
                 defaultExp.setName("First Journey");
                 defaultExp.setStartDate(LocalDate.now());
                 defaultExp.setEndDate(LocalDate.now().plusDays(7));
+
+                defaultExp.setExpeditionDescription("Our very first adventure together!");
+
                 repository.save(defaultExp);
-                System.out.println("DEBUG: Created default expedition.");
+                System.out.println("DEBUG: Created default expedition with description.");
             }
         };
     }

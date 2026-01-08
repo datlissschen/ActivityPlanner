@@ -15,6 +15,10 @@ public class ActivityIdeaService {
 
     private final ActivityIdeaRepository activityIdeaRepository;
 
+    public List<ActivityIdea> getIdeasByExpedition(Long expeditionId) {
+        return activityIdeaRepository.findByExpeditionsId(expeditionId);
+    }
+
     public ActivityIdeaService(ActivityIdeaRepository activityIdeaRepository) {
         this.activityIdeaRepository = activityIdeaRepository;
     }
@@ -25,15 +29,13 @@ public class ActivityIdeaService {
         return activityIdeaRepository.save(idea);
     }
 
-    public List<ActivityIdea> getIdeasByExpedition(Long expeditionId) {
-        return activityIdeaRepository.findAll().stream()
-                .filter(idea -> idea.getExpeditions().stream()
-                        .anyMatch(exp -> Objects.equals(exp.getId(), expeditionId)))
-                .toList();
-    }
 
     // Fixed: Removed 'static' and used the correct repository instance
     public void saveIdea(ActivityIdea idea) {
         activityIdeaRepository.save(idea);
+    }
+
+    public List<ActivityIdea> getAllIdeas() {
+        return activityIdeaRepository.findAll();
     }
 }

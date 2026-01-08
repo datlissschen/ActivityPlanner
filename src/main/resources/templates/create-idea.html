@@ -5,59 +5,52 @@
 <body>
 
 <div layout:fragment="page-content" class="form-container">
-    <div class="form-paper pink-paper"> <h1 class="hand-drawn-title">Add a New Activity Idea</h1>
+    <div class="form-paper pink-paper">
+        <h1 class="hand-drawn-title">Add a New Activity Idea</h1>
 
         <form th:action="@{/idea/save}" th:object="${idea}" method="post" enctype="multipart/form-data">
 
             <div class="input-group">
-                <label>Title:</label>
-                <label>
-                    <input type="text" th:field="*{title}" placeholder="e.g., Midnight Hike" required />
-                </label>
+                <label for="title">Title:</label>
+                <input type="text" th:field="*{title}" id="title" placeholder="e.g., Midnight Hike" required />
             </div>
 
             <div class="row">
                 <div class="input-group">
-                    <label>Place/Location:</label>
-                    <label>
-                        <input type="text" th:field="*{place}" placeholder="e.g., Black Forest" />
-                    </label>
+                    <label for="place">Place/Location:</label>
+                    <input type="text" th:field="*{place}" id="place" placeholder="e.g., Black Forest" />
                 </div>
                 <div class="input-group">
-                    <label>Precise Date (Optional):</label>
-                    <label>
-                        <input type="date" th:field="*{preciseDate}" />
-                    </label>
+                    <label for="preciseDate">Precise Date (Optional):</label>
+                    <input type="date" th:field="*{preciseDate}" id="preciseDate" />
                 </div>
             </div>
 
             <div class="input-group">
-                <label>Description:</label>
-                <label>
-                    <textarea th:field="*{description}" placeholder="What is the plan?" rows="4"></textarea>
-                </label>
+                <label for="description">Description:</label>
+                <textarea th:field="*{description}" id="description" placeholder="What is the plan?" rows="4"></textarea>
             </div>
 
             <div class="input-group">
                 <label>Belongs to Expeditions:</label>
                 <div class="station-selector">
-                    <div th:each="exp : ${belonging}" class="station-checkbox">
-                        <label>
-                            <input type="checkbox" th:field="*{expeditions}" th:value="${exp.id}" th:id="'exp-' + ${exp.id}" />
-                        </label>
+                    <div th:each="exp : ${expeditions}" class="station-checkbox">
+                        <input type="checkbox"
+                               th:field="*{expeditions}"
+                               th:value="${exp.id}"
+                               th:id="'exp-' + ${exp.id}" />
                         <label th:for="'exp-' + ${exp.id}" th:text="${exp.name}"></label>
                     </div>
+                    <p th:if="${#lists.isEmpty(expeditions)}" style="font-size: 0.8rem; color: #666;">
+                        No expeditions found. Create one first!
+                    </p>
                 </div>
             </div>
 
-            <form th:action="@{/idea/save}" th:object="${idea}" method="post" enctype="multipart/form-data">
-                <div class="input-group">
-                    <label>Upload a Photo:</label>
-                    <input type="file" name="photoFile" accept="image/*" class="file-input" />
-                </div>
-
-                <button type="submit" class="pill-btn">✨ Add Idea</button>
-            </form>
+            <div class="input-group">
+                <label for="photoFile">Upload a Photo:</label>
+                <input type="file" name="photoFile" id="photoFile" accept="image/*" class="file-input" />
+            </div>
 
             <div class="form-actions">
                 <button type="submit" class="pill-btn">✨ Add Idea</button>

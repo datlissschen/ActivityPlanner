@@ -449,3 +449,73 @@ footer {
     font-family: var(--font-hand);
     margin-top: 10px;
 }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+
+.polaroid-card {
+    background: white;
+    padding: 15px 15px 30px 15px;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    transform: rotate(var(--rotation, -1deg)); /* Subtle random rotation */
+    transition: transform 0.3s ease;
+}
+
+/* Alternate rotation for a messy scrapbook look */
+.polaroid-card:nth-child(even) { --rotation: 2deg; }
+.polaroid-card:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+
+.photo-frame img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.card-text h3 {
+    font-family: var(--font-hand);
+    margin: 15px 0 5px 0;
+    color: var(--color-ink);
+}
+
+.station-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px dashed var(--color-ink);
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    /* This ensures it doesn't get covered by other elements */
+    position: relative;
+    z-index: 5;
+}
+
+.station-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.station-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    /* Ensures the checkbox isn't ignored by the browser */
+    pointer-events: auto !important;
+}
+
+.station-checkbox label {
+    font-family: var(--font-hand);
+    font-size: 1.2rem;
+    cursor: pointer;
+    flex-grow: 1; /* Makes the whole line clickable */
+}
