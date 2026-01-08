@@ -7,10 +7,8 @@ import com.datlisschen.activityplanner.service.ExpeditionService;
 import com.datlisschen.activityplanner.model.constant.WeatherType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -74,6 +72,20 @@ public class ActivityController {
     @PostMapping("/idea/save")
     public String saveIdea(@ModelAttribute ActivityIdea idea) {
         activityService.saveIdea(idea); // Ensure this service method exists
+        return "redirect:/";
+    }
+
+    @PostMapping("/idea/save")
+    public String saveIdea(@ModelAttribute ActivityIdea idea,
+                           @RequestParam("photoFile") MultipartFile photoFile) {
+
+        String filename = storageService.store(photoFile);
+
+        if (filename != null) {
+            idea.setPhotoPath(filename);
+        }
+
+        activityIdeaService.saveIdea(idea);
         return "redirect:/";
     }
 }

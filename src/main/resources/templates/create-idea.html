@@ -50,10 +50,14 @@
                 </div>
             </div>
 
-            <div class="input-group">
-                <label>Upload a Photo:</label>
-                <input type="file" name="photoFile" class="file-input" />
-            </div>
+            <form th:action="@{/idea/save}" th:object="${idea}" method="post" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label>Upload a Photo:</label>
+                    <input type="file" name="photoFile" accept="image/*" class="file-input" />
+                </div>
+
+                <button type="submit" class="pill-btn">✨ Add Idea</button>
+            </form>
 
             <div class="form-actions">
                 <button type="submit" class="pill-btn">✨ Add Idea</button>
