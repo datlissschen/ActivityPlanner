@@ -35,25 +35,20 @@ public class ActivityController {
         LocalDate today = LocalDate.now();
         List<Expedition> expeditions = expeditionService.getAllExpeditions();
 
-        // 1. Find the current expedition (where today is between start and end)
+        // Find the current active trip
         Expedition currentExpedition = expeditions.stream()
                 .filter(e -> (today.isEqual(e.getStartDate()) || today.isAfter(e.getStartDate())) &&
                         (today.isEqual(e.getEndDate()) || today.isBefore(e.getEndDate())))
                 .findFirst()
                 .orElse(null);
 
-        // 2. Fetch ideas only for that expedition
-        List<ActivityIdea> filteredIdeas;
-        if (currentExpedition != null) {
-            filteredIdeas = activityService.getIdeasByExpedition(currentExpedition.getId());
-        } else {
-            filteredIdeas = Collections.emptyList();
-        }
+        // Get ideas only for the active trip
+        List<ActivityIdea> filteredIdeas = (currentExpedition != null)
+                ? activityService.getIdeasByExpedition(currentExpedition.getId())
+                : Collections.emptyList();
 
-        model.addAttribute("expeditions", expeditions);
         model.addAttribute("currentExpedition", currentExpedition);
         model.addAttribute("ideas", filteredIdeas);
-
         return "index";
     }
 
