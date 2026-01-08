@@ -22,7 +22,7 @@ public class Expedition {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String expeditionDescription;
 
     @Column(nullable = false)

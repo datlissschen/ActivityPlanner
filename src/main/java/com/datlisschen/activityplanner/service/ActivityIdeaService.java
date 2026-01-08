@@ -15,22 +15,27 @@ public class ActivityIdeaService {
 
     private final ActivityIdeaRepository activityIdeaRepository;
 
+    public List<ActivityIdea> getIdeasByExpedition(Long expeditionId) {
+        return activityIdeaRepository.findByExpeditionsId(expeditionId);
+    }
+
     public ActivityIdeaService(ActivityIdeaRepository activityIdeaRepository) {
         this.activityIdeaRepository = activityIdeaRepository;
     }
 
     @Transactional
     public ActivityIdea createActivityWithStations(ActivityIdea idea, Set<Expedition> stations) {
-        // Logic to link the activity to multiple 'stations' (Expeditions)
         idea.getExpeditions().addAll(stations);
         return activityIdeaRepository.save(idea);
     }
 
-    public List<ActivityIdea> getIdeasByExpedition(Long expeditionId) {
-        // Logic to find all cards belonging to a specific station
-        return activityIdeaRepository.findAll().stream()
-                .filter(idea -> idea.getExpeditions().stream()
-                        .anyMatch(exp -> Objects.equals(exp.getId(),expeditionId)))
-                .toList();
+
+    // Fixed: Removed 'static' and used the correct repository instance
+    public void saveIdea(ActivityIdea idea) {
+        activityIdeaRepository.save(idea);
+    }
+
+    public List<ActivityIdea> getAllIdeas() {
+        return activityIdeaRepository.findAll();
     }
 }

@@ -31,13 +31,28 @@
     </div>
 </div>
 
-<div layout:fragment="page-content" class="cards-container">
-    <div class="idea-card card-green">
-        <img th:src="@{/images/icon-calendar-check.png}" class="card-check-btn" alt="check">
-        <div class="card-icon">🥾</div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+<div layout:fragment="page-content">
+    <div th:if="${currentExpedition != null}" class="dashboard-grid">
+        <div th:each="idea : ${ideas}" class="polaroid-card">
+            <div class="photo-frame">
+                <img th:if="${idea.photoPath != null}"
+                     th:src="@{'/uploads/' + ${idea.photoPath}}"
+                     alt="Activity Photo">
+                <div th:if="${idea.photoPath == null}" class="photo-placeholder">
+                    <span>📷 No Photo</span>
+                </div>
+            </div>
+            <div class="card-text">
+                <h3 th:text="${idea.title}">Title</h3>
+                <p class="location" th:if="${idea.place != null}" th:text="'📍 ' + ${idea.place}"></p>
+            </div>
+        </div>
     </div>
 
+    <div th:if="${currentExpedition == null}" class="empty-state">
+        <p>No active expedition found for today.</p>
+        <p>Check your <strong>Period Overview</strong> to see upcoming trips!</p>
+    </div>
 </div>
 
 <div layout:fragment="page-footer">
