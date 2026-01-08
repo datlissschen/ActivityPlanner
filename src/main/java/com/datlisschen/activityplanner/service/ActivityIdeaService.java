@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
 @Service
 public class ActivityIdeaService {
 
@@ -31,9 +32,8 @@ public class ActivityIdeaService {
                 .toList();
     }
 
+    // Fixed: Removed 'static' and used the correct repository instance
     public void saveIdea(ActivityIdea idea) {
         activityIdeaRepository.save(idea);
     }
-
-
 }
