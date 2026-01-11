@@ -49,4 +49,9 @@ public class ExpeditionService {
 
         expeditionRepository.deleteById(id);
     }
+
+    public List<Expedition> searchExpeditions(String query) {
+        if (query == null || query.trim().isEmpty()) return getAllExpeditions();
+        return expeditionRepository.searchExpeditions(query);
+    }
 }

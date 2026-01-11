@@ -45,4 +45,9 @@ public class ActivityIdeaService {
     public void deleteIdea(Long id) {
         activityIdeaRepository.deleteById(id);
     }
+
+    public List<ActivityIdea> searchIdeas(String query) {
+        if (query == null || query.trim().isEmpty()) return getAllIdeas();
+        return activityIdeaRepository.searchIdeas(query);
+    }
 }

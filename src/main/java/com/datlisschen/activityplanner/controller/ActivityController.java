@@ -132,17 +132,18 @@ public class ActivityController {
     }
 
     @GetMapping("/expedition/list")
-    public String listAllExpeditions(Model model) {
-        List<Expedition> expeditions = expeditionService.getAllExpeditions();
-        model.addAttribute("expeditions", expeditions != null ? expeditions : Collections.emptyList());
+    public String listAllExpeditions(@RequestParam(value = "search", required = false) String search, Model model) {
+        List<Expedition> expeditions = expeditionService.searchExpeditions(search);
+        model.addAttribute("expeditions", expeditions);
+        model.addAttribute("searchQuery", search);
         return "expedition-list";
     }
 
     @GetMapping("/idea/list")
-    public String listAllIdeas(Model model) {
-        List<ActivityIdea> allIdeas = activityService.getAllIdeas();
-
-        model.addAttribute("ideas", allIdeas != null ? allIdeas : Collections.emptyList());
+    public String listAllIdeas(@RequestParam(value = "search", required = false) String search, Model model) {
+        List<ActivityIdea> ideas = activityService.searchIdeas(search);
+        model.addAttribute("ideas", ideas);
+        model.addAttribute("searchQuery", search);
         return "idea-list";
     }
 }
