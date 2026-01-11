@@ -138,4 +138,11 @@ public class ActivityController {
         return "expedition-list";
     }
 
+    @GetMapping("/idea/list")
+    public String listAllIdeas(Model model) {
+        List<ActivityIdea> allIdeas = activityService.getAllIdeas();
+
+        model.addAttribute("ideas", allIdeas != null ? allIdeas : Collections.emptyList());
+        return "idea-list";
+    }
 }
