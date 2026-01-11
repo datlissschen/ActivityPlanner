@@ -5,25 +5,25 @@
 <body>
 <div layout:fragment="page-header" class="header-wrapper">
 
-    <a th:if="${not #lists.isEmpty(expeditions)}"
-       th:href="@{/expedition/overview/{id}(id=${expeditions[0].id})}"
+    <a th:if="${currentExpedition != null}"
+       th:href="@{/expedition/overview/{id}(id=${currentExpedition.id})}"
        class="banner-link">
 
         <div class="summer-header">
-            <div class="weather-float" th:if="${!expeditions[0].typicalWeather.isEmpty()}">
+            <div class="weather-float" th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}">
                 <span class="weather-emoji"
-                      th:text="${expeditions[0].typicalWeather.iterator().next().emoji}">🌤️</span>
+                      th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
             </div>
 
             <div class="banner-text">
                 <h2>Active Adventure:</h2>
-                <h1 th:text="${expeditions[0].name}">Summer Mornings</h1>
-                <p th:text="${expeditions[0].startDate} + ' to ' + ${expeditions[0].endDate}"></p>
+                <h1 th:text="${currentExpedition.name}">Summer Mornings</h1>
+                <p th:text="${#temporals.format(currentExpedition.startDate, 'dd.MM')} + ' to ' + ${#temporals.format(currentExpedition.endDate, 'dd.MM')}"></p>
             </div>
         </div>
     </a>
 
-    <div th:if="${#lists.isEmpty(expeditions)}" class="summer-header">
+    <div th:if="${currentExpedition == null}" class="summer-header">
         <div class="banner-text">
             <h2>Welcome!</h2>
             <h1>Create your first Expedition</h1>
@@ -33,8 +33,6 @@
 
 <div layout:fragment="page-content">
     <div th:if="${currentExpedition != null}">
-        <h2 class="hand-drawn-title" th:text="'Current Adventure: ' + ${currentExpedition.name}"></h2>
-
         <div class="polaroid-grid">
             <div th:each="idea : ${ideas}" class="polaroid">
 
