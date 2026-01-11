@@ -12,8 +12,10 @@
     </div>
 
     <form th:action="@{/expedition/list}" method="get" class="search-container">
-        <input type="text" name="search" th:value="${searchQuery}"
-               placeholder="Search by title, place, or info..." class="search-input">
+        <label>
+            <input type="text" name="search" th:value="${searchQuery}"
+                   placeholder="Search by title, place, info or weather..." class="search-input">
+        </label>
         <button type="submit" class="pill-btn">🔍 Search</button>
         <a th:href="@{/expedition/list}" class="pill-btn secondary" th:if="${searchQuery}">Clear</a>
     </form>

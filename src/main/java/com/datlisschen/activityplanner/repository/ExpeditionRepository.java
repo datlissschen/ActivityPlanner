@@ -10,8 +10,11 @@ import java.util.List;
 
 @Repository
 public interface ExpeditionRepository extends JpaRepository<Expedition, Long> {
-    @Query("SELECT e FROM Expedition e WHERE " +
-            "LOWER(e.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(e.expeditionDescription) LIKE LOWER(CONCAT('%', :query, '%'))")
+
+    @Query("SELECT DISTINCT e FROM Expedition e " +
+            "LEFT JOIN e.typicalWeather w " +
+            "WHERE LOWER(e.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(e.expeditionDescription) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(w) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Expedition> searchExpeditions(@Param("query") String query);
 }
