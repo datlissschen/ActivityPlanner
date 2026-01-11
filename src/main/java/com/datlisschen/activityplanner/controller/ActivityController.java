@@ -76,7 +76,7 @@ public class ActivityController {
     @PostMapping("/expedition/delete/{id}")
     public String deleteExpedition(@PathVariable Long id) {
         expeditionService.deleteExpedition(id);
-        return "redirect:/";
+        return "redirect:/expedition/list";
     }
 
     @GetMapping("/idea/new")
