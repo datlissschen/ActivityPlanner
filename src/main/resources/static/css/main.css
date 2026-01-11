@@ -519,3 +519,82 @@ footer {
     cursor: pointer;
     flex-grow: 1; /* Makes the whole line clickable */
 }
+
+/* The Container Grid */
+.polaroid-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 40px;
+    padding: 30px;
+}
+
+/* The Polaroid Card */
+.polaroid {
+    background: #ffffff;
+    padding: 15px 15px 40px 15px; /* Bottom padding is larger for the caption */
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.15);
+    border: 1px solid #e0e0e0;
+    transition: transform 0.3s ease-in-out;
+    cursor: default;
+}
+
+/* Give each card a slightly different tilt for a "messy" look */
+.polaroid:nth-child(odd) { transform: rotate(-2deg); }
+.polaroid:nth-child(even) { transform: rotate(1.5deg); }
+
+.polaroid:hover {
+    transform: scale(1.05) rotate(0deg);
+    z-index: 10;
+    box-shadow: 12px 12px 25px rgba(0,0,0,0.2);
+}
+
+/* The Photo Section */
+.photo-container {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+}
+
+.photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* The Caption Section */
+.polaroid-caption {
+    padding-top: 15px;
+    text-align: center;
+}
+
+.polaroid-caption h3 {
+    font-family: var(--font-hand);
+    font-size: 1.4rem;
+    margin: 0;
+    color: var(--color-ink);
+}
+
+.polaroid-caption p {
+    font-family: var(--font-hand);
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #666;
+}
+
+.polaroid-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.pill-btn.danger {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+}
+
+.pill-btn.danger:hover {
+    background-color: #ff4d4d;
+    color: white;
+}

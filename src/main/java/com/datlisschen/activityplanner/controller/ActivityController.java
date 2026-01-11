@@ -35,25 +35,20 @@ public class ActivityController {
         LocalDate today = LocalDate.now();
         List<Expedition> expeditions = expeditionService.getAllExpeditions();
 
-        // 1. Find the current expedition (where today is between start and end)
+        // Find the current active trip
         Expedition currentExpedition = expeditions.stream()
                 .filter(e -> (today.isEqual(e.getStartDate()) || today.isAfter(e.getStartDate())) &&
                         (today.isEqual(e.getEndDate()) || today.isBefore(e.getEndDate())))
                 .findFirst()
                 .orElse(null);
 
-        // 2. Fetch ideas only for that expedition
-        List<ActivityIdea> filteredIdeas;
-        if (currentExpedition != null) {
-            filteredIdeas = activityService.getIdeasByExpedition(currentExpedition.getId());
-        } else {
-            filteredIdeas = Collections.emptyList();
-        }
+        // Get ideas only for the active trip
+        List<ActivityIdea> filteredIdeas = (currentExpedition != null)
+                ? activityService.getIdeasByExpedition(currentExpedition.getId())
+                : Collections.emptyList();
 
-        model.addAttribute("expeditions", expeditions);
         model.addAttribute("currentExpedition", currentExpedition);
         model.addAttribute("ideas", filteredIdeas);
-
         return "index";
     }
 
@@ -110,6 +105,32 @@ public class ActivityController {
         return "redirect:/";
     }
 
+    // 1. View Idea Details
+    @GetMapping("/idea/edit/{id}")
+    public String showIdeaDetails(@PathVariable Long id, Model model) {
+        ActivityIdea idea = activityService.getIdeaById(id); // Ensure this method is in your Service
+        model.addAttribute("idea", idea);
+        model.addAttribute("expeditions", expeditionService.getAllExpeditions());
+        return "idea-details";
+    }
 
+    // 2. Update/Save Idea (Standardizing with your existing save logic)
+    @PostMapping("/idea/update")
+    public String updateIdea(@ModelAttribute ActivityIdea idea,
+                             @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
+        if (photoFile != null && !photoFile.isEmpty()) {
+            String filename = storageService.store(photoFile);
+            idea.setPhotoPath(filename);
+        }
+        activityService.saveIdea(idea);
+        return "redirect:/";
+    }
+
+    // 3. Delete Idea
+    @PostMapping("/idea/delete/{id}")
+    public String deleteIdea(@PathVariable Long id) {
+        activityService.deleteIdea(id); // Ensure this method is in your Service
+        return "redirect:/";
+    }
 
 }

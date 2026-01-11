@@ -29,13 +29,20 @@ public class ActivityIdeaService {
         return activityIdeaRepository.save(idea);
     }
 
-
-    // Fixed: Removed 'static' and used the correct repository instance
     public void saveIdea(ActivityIdea idea) {
         activityIdeaRepository.save(idea);
     }
 
     public List<ActivityIdea> getAllIdeas() {
         return activityIdeaRepository.findAll();
+    }
+
+    public ActivityIdea getIdeaById(Long id) {
+        return activityIdeaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Idea not found"));
+    }
+
+    public void deleteIdea(Long id) {
+        activityIdeaRepository.deleteById(id);
     }
 }

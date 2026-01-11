@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="de">
+<body>
+
+<div layout:fragment="page-content" class="form-container">
+    <div class="form-paper pink-paper">
+        <h1 class="hand-drawn-title">Edit Idea</h1>
+
+        <form th:action="@{/idea/update}" th:object="${idea}" method="post" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{photoPath}" /> <div class="input-group">
+            <label>Title:</label>
+            <input type="text" th:field="*{title}" required />
+        </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Place:</label>
+                    <input type="text" th:field="*{place}" />
+                </div>
+                <div class="input-group">
+                    <label>Date:</label>
+                    <input type="date" th:field="*{preciseDate}" />
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Description:</label>
+                <textarea th:field="*{description}" rows="5"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Belongs to Stations:</label>
+                <div class="station-selector">
+                    <div th:each="exp : ${expeditions}" class="station-checkbox">
+                        <input type="checkbox" th:field="*{expeditions}" th:value="${exp.id}" th:id="'exp-' + ${exp.id}" />
+                        <label th:for="'exp-' + ${exp.id}" th:text="${exp.name}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Update Photo (Optional):</label>
+                <input type="file" name="photoFile" accept="image/*" class="file-input" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="pill-btn">💾 Save Changes</button>
+                <button type="submit" form="deleteForm" class="pill-btn danger">🗑️ Delete</button>
+                <a th:href="@{/}" class="pill-btn secondary">Back</a>
+            </div>
+        </form>
+
+        <form id="deleteForm" th:action="@{'/idea/delete/' + ${idea.id}}" method="post"
+              style="display: none;" onsubmit="return confirm('Really delete this idea?');">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
