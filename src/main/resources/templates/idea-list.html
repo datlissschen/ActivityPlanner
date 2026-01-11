@@ -5,8 +5,20 @@
 <body>
 
 <div layout:fragment="page-content">
-    <h1 class="hand-drawn-title">Inspiration Gallery</h1>
+    <div class="list-header">
+        <h1 class="hand-drawn-title">Inspiration Gallery</h1>
 
+        <a th:href="@{/}" class="pill-btn secondary">⬅ Back to Home</a>
+    </div>
+
+    <form th:action="@{/idea/list}" method="get" class="search-container">
+        <label>
+            <input type="text" name="search" th:value="${searchQuery}"
+                   placeholder="Search by title, place, or info..." class="search-input">
+        </label>
+        <button type="submit" class="pill-btn">🔍 Search</button>
+        <a th:href="@{/idea/list}" class="pill-btn secondary" th:if="${searchQuery}">Clear</a>
+    </form>
     <div class="polaroid-grid">
         <div th:each="idea : ${ideas}" class="polaroid">
             <a th:href="@{'/idea/edit/' + ${idea.id}}" class="polaroid-link">

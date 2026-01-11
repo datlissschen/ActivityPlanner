@@ -5,7 +5,20 @@
 <body>
 
 <div layout:fragment="page-content" class="overview-container">
-    <h1 class="hand-drawn-title">Journal of All Periods</h1>
+    <div class="list-header">
+        <h1 class="hand-drawn-title">Journal of All Periods</h1>
+
+        <a th:href="@{/}" class="pill-btn secondary">⬅ Back to Home</a>
+    </div>
+
+    <form th:action="@{/expedition/list}" method="get" class="search-container">
+        <label>
+            <input type="text" name="search" th:value="${searchQuery}"
+                   placeholder="Search by title, place, info or weather..." class="search-input">
+        </label>
+        <button type="submit" class="pill-btn">🔍 Search</button>
+        <a th:href="@{/expedition/list}" class="pill-btn secondary" th:if="${searchQuery}">Clear</a>
+    </form>
 
     <div class="expedition-stack">
         <div th:each="exp : ${expeditions}" class="expedition-strip">

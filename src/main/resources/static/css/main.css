@@ -679,3 +679,35 @@ footer {
     flex-wrap: wrap;
     justify-content: center;
 }
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px solid var(--color-ink);
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    font-family: var(--font-hand);
+    font-size: 1.1rem;
+}
+
+.pill-btn.secondary {
+    background: transparent;
+    border: 1px solid #777;
+    color: #777;
+}
