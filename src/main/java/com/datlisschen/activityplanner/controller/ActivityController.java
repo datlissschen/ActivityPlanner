@@ -19,7 +19,7 @@ public class ActivityController {
     // 1. Declare all services as private final fields
     private final ActivityIdeaService activityService;
     private final ExpeditionService expeditionService;
-    private final StorageService storageService; // Added this
+    private final StorageService storageService;
 
     // 2. Inject all three services into the constructor
     public ActivityController(ActivityIdeaService activityService,
@@ -76,7 +76,7 @@ public class ActivityController {
     @PostMapping("/expedition/delete/{id}")
     public String deleteExpedition(@PathVariable Long id) {
         expeditionService.deleteExpedition(id);
-        return "redirect:/";
+        return "redirect:/expedition/list";
     }
 
     @GetMapping("/idea/new")
@@ -94,13 +94,11 @@ public class ActivityController {
     public String saveIdea(@ModelAttribute ActivityIdea idea,
                            @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
 
-        // Use 'storageService' (lowercase s) which is now a field
         if (photoFile != null && !photoFile.isEmpty()) {
             String filename = storageService.store(photoFile);
             idea.setPhotoPath(filename);
         }
 
-        // Use 'activityService' to match the field name defined above
         activityService.saveIdea(idea);
         return "redirect:/";
     }
@@ -114,7 +112,7 @@ public class ActivityController {
         return "idea-details";
     }
 
-    // 2. Update/Save Idea (Standardizing with your existing save logic)
+    // 2. Update/Save Idea
     @PostMapping("/idea/update")
     public String updateIdea(@ModelAttribute ActivityIdea idea,
                              @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
@@ -131,6 +129,13 @@ public class ActivityController {
     public String deleteIdea(@PathVariable Long id) {
         activityService.deleteIdea(id); // Ensure this method is in your Service
         return "redirect:/";
+    }
+
+    @GetMapping("/expedition/list")
+    public String listAllExpeditions(Model model) {
+        List<Expedition> expeditions = expeditionService.getAllExpeditions();
+        model.addAttribute("expeditions", expeditions != null ? expeditions : Collections.emptyList());
+        return "expedition-list";
     }
 
 }

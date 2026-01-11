@@ -598,3 +598,65 @@ footer {
     background-color: #ff4d4d;
     color: white;
 }
+
+.overview-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.expedition-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.expedition-strip {
+    background: #fffef0; /* Slightly aged paper color */
+    padding: 20px;
+    border-left: 8px solid var(--color-ink);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.expedition-strip:hover {
+    transform: translateX(10px);
+}
+
+.strip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--color-ink);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.strip-header h2 {
+    font-family: var(--font-hand);
+    margin: 0;
+}
+
+.strip-dates {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+}
+
+.strip-description {
+    font-family: var(--font-hand);
+    color: #333;
+    line-height: 1.4;
+    margin: 10px 0;
+}
+
+.weather-emoji {
+    font-size: 1.5rem;
+    margin-right: 5px;
+}
+
+.strip-actions {
+    display: flex;
+    justify-content: flex-end;
+}

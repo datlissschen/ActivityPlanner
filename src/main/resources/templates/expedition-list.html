@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="de">
+<body>
+
+<div layout:fragment="page-content" class="overview-container">
+    <h1 class="hand-drawn-title">Journal of All Periods</h1>
+
+    <div class="expedition-stack">
+        <div th:each="exp : ${expeditions}" class="expedition-strip">
+
+            <div class="strip-header">
+                <h2 th:text="${exp.name}">Summer Mornings</h2>
+                <div class="strip-dates">
+                    <span th:text="${#temporals.format(exp.startDate, 'dd.MM.yyyy')}"></span>
+                    <span> - </span>
+                    <span th:text="${#temporals.format(exp.endDate, 'dd.MM.yyyy')}"></span>
+                </div>
+            </div>
+
+            <p class="strip-description" th:text="${exp.expeditionDescription}">Description text...</p>
+
+            <div class="strip-weather">
+                <span th:each="type : ${exp.typicalWeather}"
+                      th:text="${type.emoji}"
+                      th:title="${type.displayName}"
+                      class="weather-emoji"></span>
+            </div>
+
+            <div class="strip-actions">
+                <a th:href="@{'/expedition/overview/' + ${exp.id}}" class="pill-btn">✏️ Edit / Details</a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(expeditions)}" class="empty-state">
+            <p>Your journal is empty. Add your first period to begin!</p>
+            <a th:href="@{/expedition/new}" class="pill-btn">⊕ Add Period</a>
+        </div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 30px;">
+        <a th:href="@{/}" class="pill-btn secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>
