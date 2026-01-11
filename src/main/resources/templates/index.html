@@ -37,20 +37,23 @@
 
         <div class="polaroid-grid">
             <div th:each="idea : ${ideas}" class="polaroid">
-                <div class="photo-container">
-                    <img th:if="${idea.photoPath != null}"
-                         th:src="@{'/uploads/' + ${idea.photoPath}}"
-                         alt="Idea Photo">
-                    <div th:if="${idea.photoPath == null}" class="no-photo">
-                        <span>📷 Draw a memory...</span>
-                    </div>
-                </div>
 
-                <div class="polaroid-caption">
-                    <h3 th:text="${idea.title}"></h3>
-                    <p th:if="${idea.place != null}" th:text="'📍 ' + ${idea.place}"></p>
-                    <p class="description-preview" th:text="${idea.description}"></p>
-                </div>
+                <a th:href="@{'/idea/edit/' + ${idea.id}}" class="polaroid-link">
+                    <div class="photo-container">
+                        <img th:if="${idea.photoPath != null}"
+                             th:src="@{'/uploads/' + ${idea.photoPath}}"
+                             alt="Idea Photo">
+                        <div th:if="${idea.photoPath == null}" class="no-photo">
+                            <span>📷 No Photo</span>
+                        </div>
+                    </div>
+
+                    <div class="polaroid-caption">
+                        <h3 th:text="${idea.title}">Title</h3>
+                        <p th:if="${idea.place != null}" th:text="'📍 ' + ${idea.place}"></p>
+                    </div>
+                </a>
+
             </div>
         </div>
     </div>

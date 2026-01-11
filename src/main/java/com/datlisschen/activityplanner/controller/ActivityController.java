@@ -105,6 +105,32 @@ public class ActivityController {
         return "redirect:/";
     }
 
+    // 1. View Idea Details
+    @GetMapping("/idea/edit/{id}")
+    public String showIdeaDetails(@PathVariable Long id, Model model) {
+        ActivityIdea idea = activityService.getIdeaById(id); // Ensure this method is in your Service
+        model.addAttribute("idea", idea);
+        model.addAttribute("expeditions", expeditionService.getAllExpeditions());
+        return "idea-details";
+    }
 
+    // 2. Update/Save Idea (Standardizing with your existing save logic)
+    @PostMapping("/idea/update")
+    public String updateIdea(@ModelAttribute ActivityIdea idea,
+                             @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
+        if (photoFile != null && !photoFile.isEmpty()) {
+            String filename = storageService.store(photoFile);
+            idea.setPhotoPath(filename);
+        }
+        activityService.saveIdea(idea);
+        return "redirect:/";
+    }
+
+    // 3. Delete Idea
+    @PostMapping("/idea/delete/{id}")
+    public String deleteIdea(@PathVariable Long id) {
+        activityService.deleteIdea(id); // Ensure this method is in your Service
+        return "redirect:/";
+    }
 
 }

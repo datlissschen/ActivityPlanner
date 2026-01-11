@@ -582,3 +582,19 @@ footer {
     margin: 5px 0;
     color: #666;
 }
+
+.polaroid-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.pill-btn.danger {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+}
+
+.pill-btn.danger:hover {
+    background-color: #ff4d4d;
+    color: white;
+}
