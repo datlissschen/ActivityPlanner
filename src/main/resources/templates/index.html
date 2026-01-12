@@ -68,3 +68,34 @@
 </body>
 </html>
 
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const weatherContainer = document.getElementById('weather-banner');
+        const emojiDisplay = document.getElementById('emoji-display');
+
+        if (weatherContainer && emojiDisplay) {
+            // Get list of emojis from the data attribute
+            const emojisAttr = weatherContainer.getAttribute('data-emojis');
+            if (emojisAttr) {
+                const emojiList = emojisAttr.split(',');
+
+                // Only start loop if there's more than one emoji
+                if (emojiList.length > 1) {
+                    let currentIndex = 0;
+
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % emojiList.length;
+                        emojiDisplay.style.opacity = 0; // fade effect
+
+                        setTimeout(() => {
+                            emojiDisplay.textContent = emojiList[currentIndex];
+                            emojiDisplay.style.opacity = 1;
+                        }, 300); // Wait for fade-out before changing
+                    }, 3000); // 3 seconds interval
+                }
+            }
+        }
+    });
+</script>
+

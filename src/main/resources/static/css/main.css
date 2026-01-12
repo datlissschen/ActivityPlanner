@@ -183,11 +183,6 @@ body {
     transform: rotate(-1deg) scale(1.02);
 }
 
-/* Specific Card Colors */
-.card-green { background-color: var(--color-green-card); }
-.card-blue  { background-color: var(--color-blue-card); }
-.card-pink  { background-color: var(--color-pink-card); }
-
 /* Card Content Styling */
 .idea-card p {
     font-size: 1.4rem;
@@ -710,4 +705,30 @@ footer {
     background: transparent;
     border: 1px solid #777;
     color: #777;
+}
+
+.weather-emoji {
+    font-size: 2.5rem;
+    transition: opacity 0.3s ease-in-out;
+    display: inline-block;
+}
+
+.weather-float {
+    min-width: 50px;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+a {
+    color: #0060B6;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0060B6;
+    text-decoration:none;
+    cursor:pointer;
 }
