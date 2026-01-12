@@ -10,8 +10,13 @@
        class="banner-link">
 
         <div class="summer-header">
-            <div class="weather-float" th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}">
-                <span class="weather-emoji"
+            <div class="weather-float" id="weather-banner"
+                 th:if="${currentExpedition != null and not #sets.isEmpty(currentExpedition.typicalWeather)}">
+
+                <input type="hidden" id="emoji-list-data"
+                       th:value="${currentExpedition.getWeatherEmojisString()}" />
+
+                <span class="weather-emoji" id="emoji-display"
                       th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
             </div>
 
@@ -62,40 +67,39 @@
 </div>
 
 <div layout:fragment="page-footer">
-    <div th:replace="~{fragments/actions :: bottom-buttons}"></div>
-</div>
 
+    <div th:replace="~{fragments/actions :: bottom-buttons}"></div>
+
+    <th:block layout:fragment="scripts">
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const dataInput = document.getElementById('emoji-list-data');
+                const emojiDisplay = document.getElementById('emoji-display');
+
+                if (dataInput && emojiDisplay) {
+                    const emojisRaw = dataInput.value;
+                    if (emojisRaw) {
+                        const emojiList = emojisRaw.split(',');
+
+                        if (emojiList.length > 1) {
+                            let currentIndex = 0;
+                            setInterval(() => {
+                                currentIndex = (currentIndex + 1) % emojiList.length;
+
+                                emojiDisplay.style.opacity = 0;
+                                setTimeout(() => {
+                                    emojiDisplay.textContent = emojiList[currentIndex];
+                                    emojiDisplay.style.opacity = 1;
+                                }, 300);
+                            }, 3000);
+                        }
+                    }
+                }
+            });
+        </script>
+    </th:block>
+</div>
 </body>
 </html>
 
-
-<script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const weatherContainer = document.getElementById('weather-banner');
-        const emojiDisplay = document.getElementById('emoji-display');
-
-        if (weatherContainer && emojiDisplay) {
-            // Get list of emojis from the data attribute
-            const emojisAttr = weatherContainer.getAttribute('data-emojis');
-            if (emojisAttr) {
-                const emojiList = emojisAttr.split(',');
-
-                // Only start loop if there's more than one emoji
-                if (emojiList.length > 1) {
-                    let currentIndex = 0;
-
-                    setInterval(() => {
-                        currentIndex = (currentIndex + 1) % emojiList.length;
-                        emojiDisplay.style.opacity = 0; // fade effect
-
-                        setTimeout(() => {
-                            emojiDisplay.textContent = emojiList[currentIndex];
-                            emojiDisplay.style.opacity = 1;
-                        }, 300); // Wait for fade-out before changing
-                    }, 3000); // 3 seconds interval
-                }
-            }
-        }
-    });
-</script>
 

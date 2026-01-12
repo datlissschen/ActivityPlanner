@@ -34,4 +34,13 @@ public class Expedition {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "expedition_weather", joinColumns = @JoinColumn(name = "expedition_id"))
     private Set<WeatherType> typicalWeather;
+
+    public String getWeatherEmojisString() {
+        if (typicalWeather == null || typicalWeather.isEmpty()) {
+            return "";
+        }
+        return typicalWeather.stream()
+                .map(WeatherType::getEmoji)
+                .collect(java.util.stream.Collectors.joining(","));
+    }
 }
