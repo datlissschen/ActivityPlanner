@@ -37,6 +37,15 @@
 </div>
 
 <div layout:fragment="page-content">
+    <div th:if="${message}" class="alert-success"
+         style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <span th:text="${message}"></span>
+    </div>
+
+    <div th:if="${error}" class="alert-error"
+         style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <span th:text="${error}"></span>
+    </div>
     <div th:if="${currentExpedition != null}">
         <div class="polaroid-grid">
             <div th:each="idea : ${ideas}" class="polaroid">
