@@ -21,6 +21,11 @@ public class ActivityIdea {
     private String title;
     private String place;
 
+    private String googleEventId;
+
+    public String getGoogleEventId() { return googleEventId; }
+    public void setGoogleEventId(String googleEventId) { this.googleEventId = googleEventId; }
+
     @Column(length = 10000)
     private String description;
 

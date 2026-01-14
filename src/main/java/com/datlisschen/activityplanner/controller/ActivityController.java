@@ -5,29 +5,36 @@ import com.datlisschen.activityplanner.model.entity.Expedition;
 import com.datlisschen.activityplanner.service.ActivityIdeaService;
 import com.datlisschen.activityplanner.service.ExpeditionService;
 import com.datlisschen.activityplanner.model.constant.WeatherType;
+import com.datlisschen.activityplanner.service.GoogleCalendarService;
 import com.datlisschen.activityplanner.service.StorageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class ActivityController {
-    // 1. Declare all services as private final fields
+
     private final ActivityIdeaService activityService;
     private final ExpeditionService expeditionService;
     private final StorageService storageService;
+    // Add the Google Calendar Service
+    private final GoogleCalendarService googleCalendarService;
 
-    // 2. Inject all three services into the constructor
+    // Update the constructor to inject the new service
     public ActivityController(ActivityIdeaService activityService,
                               ExpeditionService expeditionService,
-                              StorageService storageService) {
+                              StorageService storageService,
+                              GoogleCalendarService googleCalendarService) {
         this.activityService = activityService;
         this.expeditionService = expeditionService;
         this.storageService = storageService;
+        this.googleCalendarService = googleCalendarService;
     }
 
     @GetMapping("/")
@@ -89,21 +96,33 @@ public class ActivityController {
     }
 
 
-    // 3. Combined the two saveIdea methods into one
+    // Combined the two saveIdea methods into one
     @PostMapping("/idea/save")
     public String saveIdea(@ModelAttribute ActivityIdea idea,
-                           @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
-
+                           @RequestParam(value = "photoFile", required = false) MultipartFile photoFile,
+                           RedirectAttributes redirectAttributes) {
         if (photoFile != null && !photoFile.isEmpty()) {
             String filename = storageService.store(photoFile);
             idea.setPhotoPath(filename);
+        }
+        // Save to local database first
+        activityService.saveIdea(idea);
+
+        // Trigger the Silent Sync to Google Calendar
+        // This will only sync if the idea has a date (handled inside the service)
+        String eventId = googleCalendarService.addIdeaToCalendar(idea);
+        if (eventId != null) {
+            idea.setGoogleEventId(eventId);
+            redirectAttributes.addFlashAttribute("message", "Idea saved & synced to Google!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Saved locally, but Google sync failed.");
         }
 
         activityService.saveIdea(idea);
         return "redirect:/";
     }
 
-    // 1. View Idea Details
+    //  View Idea Details
     @GetMapping("/idea/edit/{id}")
     public String showIdeaDetails(@PathVariable Long id, Model model) {
         ActivityIdea idea = activityService.getIdeaById(id); // Ensure this method is in your Service
@@ -112,7 +131,7 @@ public class ActivityController {
         return "idea-details";
     }
 
-    // 2. Update/Save Idea
+    // Update/Save Idea
     @PostMapping("/idea/update")
     public String updateIdea(@ModelAttribute ActivityIdea idea,
                              @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
@@ -121,16 +140,26 @@ public class ActivityController {
             idea.setPhotoPath(filename);
         }
         activityService.saveIdea(idea);
+
+        // Also sync on update so changes are reflected in Google
+        googleCalendarService.addIdeaToCalendar(idea);
+
         return "redirect:/";
     }
 
-    // 3. Delete Idea
+    // Delete Idea
     @PostMapping("/idea/delete/{id}")
-    public String deleteIdea(@PathVariable Long id) {
-        activityService.deleteIdea(id); // Ensure this method is in your Service
+    public String deleteIdea(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        ActivityIdea idea = activityService.getIdeaById(id);
+
+        // Delete from Google first using stored ID
+        if (idea.getGoogleEventId() != null) {
+            googleCalendarService.deleteEvent(idea.getGoogleEventId());
+        }
+        activityService.deleteIdea(id);
+        redirectAttributes.addFlashAttribute("message", "Idea deleted everywhere!");
         return "redirect:/";
     }
-
     @GetMapping("/expedition/list")
     public String listAllExpeditions(@RequestParam(value = "search", required = false) String search, Model model) {
         List<Expedition> expeditions = expeditionService.searchExpeditions(search);

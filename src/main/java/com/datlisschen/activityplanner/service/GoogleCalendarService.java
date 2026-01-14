@@ -44,31 +44,36 @@ public class GoogleCalendarService {
                 .build();
     }
 
-    public void addIdeaToCalendar(ActivityIdea idea) {
-        if (idea.getPreciseDate() == null) return;
-
+    public String addIdeaToCalendar(ActivityIdea idea) {
+        if (idea.getPreciseDate() == null) return null;
         try {
             Calendar service = getCalendarService();
-
             Event event = new Event()
                     .setSummary(idea.getTitle())
                     .setLocation(idea.getPlace() != null ? idea.getPlace() : "")
                     .setDescription(idea.getDescription());
 
-            // Convert LocalDate to Google DateTime (Setting it to 9:00 AM)
-            String dateString = idea.getPreciseDate().toString() + "T09:00:00Z";
-            DateTime startEndDateTime = new DateTime(dateString);
+            DateTime dateTime = new DateTime(idea.getPreciseDate().toString() + "T09:00:00Z");
+            event.setStart(new EventDateTime().setDateTime(dateTime));
+            event.setEnd(new EventDateTime().setDateTime(dateTime));
 
-            EventDateTime eventTime = new EventDateTime().setDateTime(startEndDateTime);
-            event.setStart(eventTime);
-            event.setEnd(eventTime);
-
-            service.events().insert(calendarId, event).execute();
-            System.out.println("Sync Successful: Event added to Google Calendar!");
-
+            // Insert and capture the result
+            Event createdEvent = service.events().insert(calendarId, event).execute();
+            return createdEvent.getId(); // Return the ID so we can save it!
         } catch (Exception e) {
-            System.err.println("Google Calendar Sync Error: " + e.getMessage());
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void deleteEvent(String eventId) {
+        if (eventId == null || eventId.isEmpty()) return;
+        try {
+            Calendar service = getCalendarService();
+            service.events().delete(calendarId, eventId).execute();
+            System.out.println("Google Event deleted: " + eventId);
+        } catch (Exception e) {
+            System.err.println("Could not delete Google Event: " + e.getMessage());
         }
     }
 }
