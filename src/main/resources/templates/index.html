@@ -37,6 +37,15 @@
 </div>
 
 <div layout:fragment="page-content">
+    <div th:if="${message}" class="alert-success"
+         style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <span th:text="${message}"></span>
+    </div>
+
+    <div th:if="${error}" class="alert-error"
+         style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <span th:text="${error}"></span>
+    </div>
     <div th:if="${currentExpedition != null}">
         <div class="polaroid-grid">
             <div th:each="idea : ${ideas}" class="polaroid">
@@ -53,7 +62,15 @@
 
                     <div class="polaroid-caption">
                         <h3 th:text="${idea.title}">Title</h3>
-                        <p th:if="${idea.place != null}" th:text="'📍 ' + ${idea.place}"></p>
+
+                        <p th:if="${idea.place != null and idea.place != ''}" th:text="'📍 ' + ${idea.place}"></p>
+
+                        <p th:if="${idea.startTime != null and idea.endTime != null}" class="time-range">
+                            🕒
+                            <span th:text="${#temporals.format(idea.startTime, 'HH:mm')}">12:00</span>
+                            -
+                            <span th:text="${#temporals.format(idea.endTime, 'HH:mm')}">14:00</span>
+                        </p>
                     </div>
                 </a>
 

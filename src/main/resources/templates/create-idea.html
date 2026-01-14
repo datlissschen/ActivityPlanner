@@ -21,8 +21,13 @@
                     <input type="text" th:field="*{place}" id="place" placeholder="e.g., Black Forest" />
                 </div>
                 <div class="input-group">
-                    <label for="preciseDate">Precise Date (Optional):</label>
-                    <input type="date" th:field="*{preciseDate}" id="preciseDate" />
+                    <label for="startTime">Start Time:</label>
+                    <input type="datetime-local" th:field="*{startTime}" id="startTime" />
+                </div>
+                <div class="input-group">
+                    <label for="endTime">End Time:</label>
+                    <input type="datetime-local" th:field="*{endTime}" id="endTime" />
+
                 </div>
             </div>
 

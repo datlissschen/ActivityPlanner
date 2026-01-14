@@ -21,9 +21,14 @@
                     <input type="text" th:field="*{place}" />
                 </div>
                 <div class="input-group">
-                    <label>Date:</label>
-                    <input type="date" th:field="*{preciseDate}" />
+                    <label for="startTime">Start Time:</label>
+                    <input type="datetime-local" th:field="*{startTime}" id="startTime" />
                 </div>
+                <div class="input-group">
+                    <label for="endTime">End Time:</label>
+                    <input type="datetime-local" th:field="*{endTime}" id="endTime" />
+                </div>
+
             </div>
 
             <div class="input-group">
@@ -44,6 +49,19 @@
             <div class="input-group">
                 <label>Update Photo (Optional):</label>
                 <input type="file" name="photoFile" accept="image/*" class="file-input" />
+            </div>
+
+            <div class="sync-info" th:if="${idea.lastSyncedAt != null}"
+                 style="margin-top: 20px; font-size: 0.9rem; color: #666; font-style: italic;">
+                <p>
+                    📅 Last synced with Google Calendar:
+                    <span th:text="${#temporals.format(idea.lastSyncedAt, 'dd.MM.yyyy HH:mm')}"></span>
+                </p>
+            </div>
+
+            <div class="sync-info" th:if="${idea.lastSyncedAt == null}"
+                 style="margin-top: 20px; font-size: 0.9rem; color: #999;">
+                <p>☁️ This idea has not been synced to Google Calendar yet.</p>
             </div>
 
             <div class="form-actions">

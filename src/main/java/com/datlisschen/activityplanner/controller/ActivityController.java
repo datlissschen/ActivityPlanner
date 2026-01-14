@@ -5,29 +5,37 @@ import com.datlisschen.activityplanner.model.entity.Expedition;
 import com.datlisschen.activityplanner.service.ActivityIdeaService;
 import com.datlisschen.activityplanner.service.ExpeditionService;
 import com.datlisschen.activityplanner.model.constant.WeatherType;
+import com.datlisschen.activityplanner.service.GoogleCalendarService;
 import com.datlisschen.activityplanner.service.StorageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 @Controller
 public class ActivityController {
-    // 1. Declare all services as private final fields
+
     private final ActivityIdeaService activityService;
     private final ExpeditionService expeditionService;
     private final StorageService storageService;
+    // Add the Google Calendar Service
+    private final GoogleCalendarService googleCalendarService;
 
-    // 2. Inject all three services into the constructor
+    // Update the constructor to inject the new service
     public ActivityController(ActivityIdeaService activityService,
                               ExpeditionService expeditionService,
-                              StorageService storageService) {
+                              StorageService storageService,
+                              GoogleCalendarService googleCalendarService) {
         this.activityService = activityService;
         this.expeditionService = expeditionService;
         this.storageService = storageService;
+        this.googleCalendarService = googleCalendarService;
     }
 
     @GetMapping("/")
@@ -89,21 +97,62 @@ public class ActivityController {
     }
 
 
-    // 3. Combined the two saveIdea methods into one
+    // Combined the two saveIdea methods into one
     @PostMapping("/idea/save")
     public String saveIdea(@ModelAttribute ActivityIdea idea,
-                           @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
-
+                           @RequestParam(value = "photoFile", required = false) MultipartFile photoFile,
+                           RedirectAttributes redirectAttributes) {
         if (photoFile != null && !photoFile.isEmpty()) {
             String filename = storageService.store(photoFile);
             idea.setPhotoPath(filename);
+        }
+
+        // Sync to Google FIRST to get the ID (using new time fields)
+        String eventId = googleCalendarService.addIdeaToCalendar(idea);
+
+        if (eventId != null) {
+            idea.setGoogleEventId(eventId);
+            idea.setLastSyncedAt(LocalDateTime.now());
+            redirectAttributes.addFlashAttribute("message", "Idea saved & synced to Google!");
+        } else if (idea.getStartTime() != null) {
+            // Updated check: if we have a start time but no eventId, sync failed
+            redirectAttributes.addFlashAttribute("error", "Saved locally, but Google sync failed. Check API status.");
         }
 
         activityService.saveIdea(idea);
         return "redirect:/";
     }
 
-    // 1. View Idea Details
+    @PostMapping("/idea/update")
+    public String updateIdea(@ModelAttribute ActivityIdea idea,
+                             @RequestParam(value = "photoFile", required = false) MultipartFile photoFile,
+                             RedirectAttributes redirectAttributes) { // Added RedirectAttributes here
+
+        if (photoFile != null && !photoFile.isEmpty()) {
+            String filename = storageService.store(photoFile);
+            idea.setPhotoPath(filename);
+        }
+
+        // Save locally
+        activityService.saveIdea(idea);
+
+        // Sync to Google
+        String eventId = googleCalendarService.addIdeaToCalendar(idea);
+
+        if (eventId != null) {
+            idea.setGoogleEventId(eventId);
+            idea.setLastSyncedAt(LocalDateTime.now());
+            // Save again to store the Google ID and timestamp
+            activityService.saveIdea(idea);
+            redirectAttributes.addFlashAttribute("message", "Idea updated and synced successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Idea updated locally!");
+        }
+
+        return "redirect:/";
+    }
+
+    //  View Idea Details
     @GetMapping("/idea/edit/{id}")
     public String showIdeaDetails(@PathVariable Long id, Model model) {
         ActivityIdea idea = activityService.getIdeaById(id); // Ensure this method is in your Service
@@ -112,25 +161,19 @@ public class ActivityController {
         return "idea-details";
     }
 
-    // 2. Update/Save Idea
-    @PostMapping("/idea/update")
-    public String updateIdea(@ModelAttribute ActivityIdea idea,
-                             @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
-        if (photoFile != null && !photoFile.isEmpty()) {
-            String filename = storageService.store(photoFile);
-            idea.setPhotoPath(filename);
-        }
-        activityService.saveIdea(idea);
-        return "redirect:/";
-    }
-
-    // 3. Delete Idea
+    // Delete Idea
     @PostMapping("/idea/delete/{id}")
-    public String deleteIdea(@PathVariable Long id) {
-        activityService.deleteIdea(id); // Ensure this method is in your Service
+    public String deleteIdea(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        ActivityIdea idea = activityService.getIdeaById(id);
+
+        // Delete from Google first using stored ID
+        if (idea.getGoogleEventId() != null) {
+            googleCalendarService.deleteEvent(idea.getGoogleEventId());
+        }
+        activityService.deleteIdea(id);
+        redirectAttributes.addFlashAttribute("message", "Idea deleted everywhere!");
         return "redirect:/";
     }
-
     @GetMapping("/expedition/list")
     public String listAllExpeditions(@RequestParam(value = "search", required = false) String search, Model model) {
         List<Expedition> expeditions = expeditionService.searchExpeditions(search);

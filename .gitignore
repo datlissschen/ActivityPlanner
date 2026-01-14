@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Google Cloud Service Account Key
+service-account-key.json
+src/main/resources/service-account-key.json
