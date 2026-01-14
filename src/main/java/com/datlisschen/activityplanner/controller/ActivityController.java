@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -105,20 +106,20 @@ public class ActivityController {
             String filename = storageService.store(photoFile);
             idea.setPhotoPath(filename);
         }
-        // Save to local database first
-        activityService.saveIdea(idea);
 
-        // Trigger the Silent Sync to Google Calendar
-        // This will only sync if the idea has a date (handled inside the service)
+        // Sync to Google FIRST to get the ID (if date is present)
         String eventId = googleCalendarService.addIdeaToCalendar(idea);
+
         if (eventId != null) {
             idea.setGoogleEventId(eventId);
+            idea.setLastSyncedAt(LocalDateTime.now());
             redirectAttributes.addFlashAttribute("message", "Idea saved & synced to Google!");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Saved locally, but Google sync failed.");
+        } else if (idea.getPreciseDate() != null) {
+            // Only show error if a date was actually set but sync failed
+            redirectAttributes.addFlashAttribute("error", "Saved locally, but Google sync failed. Check API status.");
         }
-
         activityService.saveIdea(idea);
+
         return "redirect:/";
     }
 

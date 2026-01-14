@@ -4,7 +4,10 @@ import com.datlisschen.activityplanner.model.constant.WeatherType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -17,7 +20,8 @@ public class ActivityIdea {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate preciseDate;
     private String title;
     private String place;
 
@@ -26,11 +30,15 @@ public class ActivityIdea {
     public String getGoogleEventId() { return googleEventId; }
     public void setGoogleEventId(String googleEventId) { this.googleEventId = googleEventId; }
 
+    private LocalDateTime lastSyncedAt;
+
+    public LocalDateTime getLastSyncedAt() { return lastSyncedAt; }
+    public void setLastSyncedAt(LocalDateTime lastSyncedAt) { this.lastSyncedAt = lastSyncedAt; }
+
     @Column(length = 10000)
     private String description;
 
     private String photoPath;
-    private LocalDate preciseDate;
 
     // Initializing the Set prevents NullPointerExceptions in your Service
     @ElementCollection(targetClass = WeatherType.class)
