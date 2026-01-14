@@ -732,3 +732,11 @@ a:hover {
     text-decoration:none;
     cursor:pointer;
 }
+
+.time-range {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 4px;
+    font-family: 'Courier New', Courier, monospace; /* Gives it a typed-label look */
+    font-weight: bold;
+}

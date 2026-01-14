@@ -21,9 +21,14 @@
                     <input type="text" th:field="*{place}" />
                 </div>
                 <div class="input-group">
-                    <label>Date:</label>
-                    <input type="date" th:field="*{preciseDate}" />
+                    <label for="startTime">Start Time:</label>
+                    <input type="datetime-local" th:field="*{startTime}" id="startTime" />
                 </div>
+                <div class="input-group">
+                    <label for="endTime">End Time:</label>
+                    <input type="datetime-local" th:field="*{endTime}" id="endTime" />
+                </div>
+
             </div>
 
             <div class="input-group">

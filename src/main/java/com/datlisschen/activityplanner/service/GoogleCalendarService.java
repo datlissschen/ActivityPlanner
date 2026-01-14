@@ -43,24 +43,39 @@ public class GoogleCalendarService {
                 .setApplicationName("Activity Planner")
                 .build();
     }
-
     public String addIdeaToCalendar(ActivityIdea idea) {
-        if (idea.getPreciseDate() == null) return null;
+        if (idea.getStartTime() == null || idea.getEndTime() == null) return null;
+
         try {
             Calendar service = getCalendarService();
+
             Event event = new Event()
                     .setSummary(idea.getTitle())
                     .setLocation(idea.getPlace() != null ? idea.getPlace() : "")
                     .setDescription(idea.getDescription());
 
-            DateTime dateTime = new DateTime(idea.getPreciseDate().toString() + "T09:00:00Z");
-            event.setStart(new EventDateTime().setDateTime(dateTime));
-            event.setEnd(new EventDateTime().setDateTime(dateTime));
+            // SAFE CONVERSION: LocalDateTime -> ZonedDateTime -> Instant -> java.util.Date
+            java.util.Date startDate = java.util.Date.from(idea.getStartTime()
+                    .atZone(java.time.ZoneId.systemDefault()).toInstant());
+            java.util.Date endDate = java.util.Date.from(idea.getEndTime()
+                    .atZone(java.time.ZoneId.systemDefault()).toInstant());
 
-            // Insert and capture the result
-            Event createdEvent = service.events().insert(calendarId, event).execute();
-            return createdEvent.getId(); // Return the ID so we can save it!
+            // Create Google DateTime objects from the java.util.Date
+            event.setStart(new EventDateTime().setDateTime(new com.google.api.client.util.DateTime(startDate)));
+            event.setEnd(new EventDateTime().setDateTime(new com.google.api.client.util.DateTime(endDate)));
+
+            // If updating an existing event, use update() instead of insert()
+            Event result;
+            if (idea.getGoogleEventId() != null && !idea.getGoogleEventId().isEmpty()) {
+                result = service.events().update(calendarId, idea.getGoogleEventId(), event).execute();
+            } else {
+                result = service.events().insert(calendarId, event).execute();
+            }
+
+            return result.getId();
+
         } catch (Exception e) {
+            System.err.println("Google Sync Error: " + e.getMessage());
             e.printStackTrace();
             return null;
         }

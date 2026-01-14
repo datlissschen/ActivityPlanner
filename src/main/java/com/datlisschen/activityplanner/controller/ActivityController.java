@@ -107,18 +107,47 @@ public class ActivityController {
             idea.setPhotoPath(filename);
         }
 
-        // Sync to Google FIRST to get the ID (if date is present)
+        // Sync to Google FIRST to get the ID (using new time fields)
         String eventId = googleCalendarService.addIdeaToCalendar(idea);
 
         if (eventId != null) {
             idea.setGoogleEventId(eventId);
             idea.setLastSyncedAt(LocalDateTime.now());
             redirectAttributes.addFlashAttribute("message", "Idea saved & synced to Google!");
-        } else if (idea.getPreciseDate() != null) {
-            // Only show error if a date was actually set but sync failed
+        } else if (idea.getStartTime() != null) {
+            // Updated check: if we have a start time but no eventId, sync failed
             redirectAttributes.addFlashAttribute("error", "Saved locally, but Google sync failed. Check API status.");
         }
+
         activityService.saveIdea(idea);
+        return "redirect:/";
+    }
+
+    @PostMapping("/idea/update")
+    public String updateIdea(@ModelAttribute ActivityIdea idea,
+                             @RequestParam(value = "photoFile", required = false) MultipartFile photoFile,
+                             RedirectAttributes redirectAttributes) { // Added RedirectAttributes here
+
+        if (photoFile != null && !photoFile.isEmpty()) {
+            String filename = storageService.store(photoFile);
+            idea.setPhotoPath(filename);
+        }
+
+        // Save locally
+        activityService.saveIdea(idea);
+
+        // Sync to Google
+        String eventId = googleCalendarService.addIdeaToCalendar(idea);
+
+        if (eventId != null) {
+            idea.setGoogleEventId(eventId);
+            idea.setLastSyncedAt(LocalDateTime.now());
+            // Save again to store the Google ID and timestamp
+            activityService.saveIdea(idea);
+            redirectAttributes.addFlashAttribute("message", "Idea updated and synced successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Idea updated locally!");
+        }
 
         return "redirect:/";
     }
@@ -130,22 +159,6 @@ public class ActivityController {
         model.addAttribute("idea", idea);
         model.addAttribute("expeditions", expeditionService.getAllExpeditions());
         return "idea-details";
-    }
-
-    // Update/Save Idea
-    @PostMapping("/idea/update")
-    public String updateIdea(@ModelAttribute ActivityIdea idea,
-                             @RequestParam(value = "photoFile", required = false) MultipartFile photoFile) {
-        if (photoFile != null && !photoFile.isEmpty()) {
-            String filename = storageService.store(photoFile);
-            idea.setPhotoPath(filename);
-        }
-        activityService.saveIdea(idea);
-
-        // Also sync on update so changes are reflected in Google
-        googleCalendarService.addIdeaToCalendar(idea);
-
-        return "redirect:/";
     }
 
     // Delete Idea

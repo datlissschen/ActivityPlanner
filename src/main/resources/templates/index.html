@@ -62,7 +62,15 @@
 
                     <div class="polaroid-caption">
                         <h3 th:text="${idea.title}">Title</h3>
-                        <p th:if="${idea.place != null}" th:text="'📍 ' + ${idea.place}"></p>
+
+                        <p th:if="${idea.place != null and idea.place != ''}" th:text="'📍 ' + ${idea.place}"></p>
+
+                        <p th:if="${idea.startTime != null and idea.endTime != null}" class="time-range">
+                            🕒
+                            <span th:text="${#temporals.format(idea.startTime, 'HH:mm')}">12:00</span>
+                            -
+                            <span th:text="${#temporals.format(idea.endTime, 'HH:mm')}">14:00</span>
+                        </p>
                     </div>
                 </a>
 
