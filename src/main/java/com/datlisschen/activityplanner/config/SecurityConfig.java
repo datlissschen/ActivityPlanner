@@ -16,21 +16,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Disable CSRF (Cross-Site Request Forgery) for local development
+                // Disable CSRF for local development and H2 Console
                 .csrf(csrf -> csrf.disable())
 
-                // 2. Allow all requests to all URLs without a password
+                // Configure Authorization
                 .authorizeHttpRequests(auth -> auth
+                        // Specific static and upload paths
+                        .requestMatchers("/css/**", "/js/**", "/uploads/**").permitAll()
+                        // Specific application paths
+                        .requestMatchers("/", "/idea/**", "/expedition/**").permitAll()
+                        // Allow anything else (like H2 console or remaining routes)
                         .anyRequest().permitAll()
                 )
 
-                // 3. Specifically disable the login form and basic auth popups
+                // Disable Login UI and Basic Auth for a "Kiosk" style app
                 .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable());
+                .httpBasic(basic -> basic.disable())
+
+                // Allow H2 Console to display in frames (if you use it)
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
     }
-
     @Bean
     public LayoutDialect layoutDialect() {
         return new LayoutDialect();
