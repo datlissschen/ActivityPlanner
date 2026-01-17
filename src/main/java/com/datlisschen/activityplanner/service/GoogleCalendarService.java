@@ -30,7 +30,8 @@ public class GoogleCalendarService {
 
     private Calendar getCalendarService() throws IOException, GeneralSecurityException {
         InputStream in = GoogleCalendarService.class.getResourceAsStream("/service-account-key.json");
-        if (in == null) {
+        if (in == null)
+        {
             throw new IOException("Service account key file not found in resources!");
         }
 
@@ -46,7 +47,9 @@ public class GoogleCalendarService {
     public String addIdeaToCalendar(ActivityIdea idea) {
         if (idea.getStartTime() == null || idea.getEndTime() == null) return null;
 
-        try {
+
+        try
+        {
             Calendar service = getCalendarService();
 
             Event event = new Event()
@@ -66,15 +69,17 @@ public class GoogleCalendarService {
 
             // If updating an existing event, use update() instead of insert()
             Event result;
-            if (idea.getGoogleEventId() != null && !idea.getGoogleEventId().isEmpty()) {
+            if (idea.getGoogleEventId() != null && !idea.getGoogleEventId().isEmpty())
+            {
                 result = service.events().update(calendarId, idea.getGoogleEventId(), event).execute();
-            } else {
+            } else
+            {
                 result = service.events().insert(calendarId, event).execute();
             }
-
             return result.getId();
 
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             System.err.println("Google Sync Error: " + e.getMessage());
             e.printStackTrace();
             return null;
@@ -83,11 +88,13 @@ public class GoogleCalendarService {
 
     public void deleteEvent(String eventId) {
         if (eventId == null || eventId.isEmpty()) return;
-        try {
+        try
+        {
             Calendar service = getCalendarService();
             service.events().delete(calendarId, eventId).execute();
             System.out.println("Google Event deleted: " + eventId);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             System.err.println("Could not delete Google Event: " + e.getMessage());
         }
     }

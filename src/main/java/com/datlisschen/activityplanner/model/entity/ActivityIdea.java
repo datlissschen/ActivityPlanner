@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.HashSet;
@@ -47,4 +49,19 @@ public class ActivityIdea {
             inverseJoinColumns = @JoinColumn(name = "expedition_id")
     )
     private Set<Expedition> expeditions = new HashSet<>();
+
+    public String getDurationFormatted() {
+        if (startTime == null || endTime == null) {
+            return "";
+        }
+        Duration duration = Duration.between(startTime, endTime);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart(); // Gets the remaining minutes
+
+        if (hours > 0) {
+            return hours + "h " + (minutes > 0 ? minutes + "m" : "");
+        } else {
+            return minutes + "m";
+        }
+    }
 }

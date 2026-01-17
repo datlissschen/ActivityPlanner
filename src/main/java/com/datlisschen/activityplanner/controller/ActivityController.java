@@ -126,29 +126,30 @@ public class ActivityController {
     @PostMapping("/idea/update")
     public String updateIdea(@ModelAttribute ActivityIdea idea,
                              @RequestParam(value = "photoFile", required = false) MultipartFile photoFile,
-                             RedirectAttributes redirectAttributes) { // Added RedirectAttributes here
+                             RedirectAttributes redirectAttributes) {
+
+        ActivityIdea existingIdea = activityService.getIdeaById(idea.getId());
 
         if (photoFile != null && !photoFile.isEmpty()) {
             String filename = storageService.store(photoFile);
             idea.setPhotoPath(filename);
+        } else {
+            // Keep the old photo if no new one is uploaded
+            idea.setPhotoPath(existingIdea.getPhotoPath());
         }
-
-        // Save locally
-        activityService.saveIdea(idea);
+        idea.setGoogleEventId(existingIdea.getGoogleEventId());
 
         // Sync to Google
         String eventId = googleCalendarService.addIdeaToCalendar(idea);
-
         if (eventId != null) {
             idea.setGoogleEventId(eventId);
             idea.setLastSyncedAt(LocalDateTime.now());
-            // Save again to store the Google ID and timestamp
-            activityService.saveIdea(idea);
-            redirectAttributes.addFlashAttribute("message", "Idea updated and synced successfully!");
+            redirectAttributes.addFlashAttribute("message", "Calendar entry moved to the new time!");
         } else {
             redirectAttributes.addFlashAttribute("message", "Idea updated locally!");
         }
-
+        // Save locally
+        activityService.saveIdea(idea);
         return "redirect:/";
     }
 

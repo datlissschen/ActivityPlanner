@@ -10,15 +10,21 @@
 
         <form th:action="@{/idea/update}" th:object="${idea}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}" />
-            <input type="hidden" th:field="*{photoPath}" /> <div class="input-group">
-            <label>Title:</label>
-            <input type="text" th:field="*{title}" required />
-        </div>
+            <input type="hidden" th:field="*{photoPath}" />
+            <input type="hidden" th:field="*{googleEventId}" />
+            <input type="hidden" th:field="*{lastSyncedAt}" />
+
+            <div class="input-group">
+                <label for="title">Title:</label>
+                <input type="text" th:field="*{title}" id="title" required />
+            </div>
 
             <div class="row">
                 <div class="input-group">
                     <label>Place:</label>
-                    <input type="text" th:field="*{place}" />
+                    <label>
+                        <input type="text" th:field="*{place}" />
+                    </label>
                 </div>
                 <div class="input-group">
                     <label for="startTime">Start Time:</label>
@@ -33,14 +39,22 @@
 
             <div class="input-group">
                 <label>Description:</label>
-                <textarea th:field="*{description}" rows="5"></textarea>
+                <label>
+                    <textarea th:field="*{description}" rows="5"></textarea>
+                </label>
             </div>
 
             <div class="input-group">
-                <label>Belongs to Stations:</label>
+                <label>Belongs to Expeditions:</label>
                 <div class="station-selector">
                     <div th:each="exp : ${expeditions}" class="station-checkbox">
-                        <input type="checkbox" th:field="*{expeditions}" th:value="${exp.id}" th:id="'exp-' + ${exp.id}" />
+                        <label>
+                            <input type="checkbox"
+                                   th:field="*{expeditions}"
+                                   th:value="${exp.id}"
+                                   th:id="'exp-' + ${exp.id}" />
+                        </label>
+
                         <label th:for="'exp-' + ${exp.id}" th:text="${exp.name}"></label>
                     </div>
                 </div>
