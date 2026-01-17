@@ -60,8 +60,18 @@
                 </div>
             </div>
 
+            <div class="input-group" th:if="${idea.photoPath != null}">
+                <label style="color: #d9534f; cursor: pointer;">
+                    <input type="checkbox" name="removePhoto" value="true" />
+                    🗑️ Remove current photo
+                </label>
+                <div class="current-photo-preview">
+                    <p style="font-size: 0.8rem; color: #666;">Current photo: <span th:text="${idea.photoPath}"></span></p>
+                </div>
+            </div>
+
             <div class="input-group">
-                <label>Update Photo (Optional):</label>
+                <label>Update/Upload Photo:</label>
                 <input type="file" name="photoFile" accept="image/*" class="file-input" />
             </div>
 
