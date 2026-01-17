@@ -37,45 +37,75 @@
 </div>
 
 <div layout:fragment="page-content">
-    <div th:if="${message}" class="alert-success"
-         style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <span th:text="${message}"></span>
+    <h2 class="hand-drawn-title" th:if="${currentExpedition != null}"
+        th:text="${currentExpedition.name}">Current Expedition</h2>
+
+    <div th:if="${#lists.isEmpty(ideas)}" class="empty-state">
+        <p>No ideas scheduled for today. Time to plan an adventure!</p>
     </div>
 
-    <div th:if="${error}" class="alert-error"
-         style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <span th:text="${error}"></span>
-    </div>
-    <div th:if="${currentExpedition != null}">
-        <div class="polaroid-grid">
-            <div th:each="idea : ${ideas}"
-                 class="polaroid"
-                 th:classappend="${idea.photoPath == null} ? 'compact' : ''">
+    <div class="slider-container" th:if="${not #lists.isEmpty(ideas)}">
+        <button class="nav-arrow left" id="leftArrow" onclick="scrollGrid(-1)">❮</button>
 
-                <a th:href="@{/idea/edit/{id}(id=${idea.id})}" class="polaroid-link">
+        <div class="polaroid-viewport" id="viewport">
+            <div class="polaroid-grid">
+                <div th:each="idea : ${ideas}"
+                     class="polaroid"
+                     th:classappend="${idea.photoPath == null} ? 'compact' : ''">
 
-                    <div class="photo-container" th:if="${idea.photoPath != null}">
-                        <img th:src="@{'/uploads/' + ${idea.photoPath}}" alt="Idea Photo">
-                    </div>
+                    <div class="time-marker" th:attr="data-time=${#temporals.format(idea.startTime, 'HH:mm')}"></div>
 
-                    <div class="polaroid-caption">
-                        <h3 th:text="${idea.title}">Title</h3>
-                        <p th:if="${idea.place != null and idea.place != ''}" th:text="'📍 ' + ${idea.place}"></p>
-
-                        <p th:if="${idea.startTime != null}" class="time-range">
-                            🕒 <span th:text="${#temporals.format(idea.startTime, 'HH:mm')}"></span>
-                            - <span th:text="${#temporals.format(idea.endTime, 'HH:mm')}"></span>
-                        </p>
-                    </div>
-                </a>
+                    <a th:href="@{/idea/edit/{id}(id=${idea.id})}" class="polaroid-link">
+                        <div class="photo-container" th:if="${idea.photoPath != null}">
+                            <img th:src="@{'/uploads/' + ${idea.photoPath}}" alt="Idea Photo">
+                        </div>
+                        <div class="polaroid-caption">
+                            <h3 th:text="${idea.title}">Title</h3>
+                            <p th:if="${idea.place != null and idea.place != ''}" th:text="'📍 ' + ${idea.place}"></p>
+                            <p th:if="${idea.startTime != null}" class="time-range">
+                                🕒 <span th:text="${#temporals.format(idea.startTime, 'HH:mm')}"></span>
+                                <small th:text="'(' + ${idea.getDurationFormatted()} + ')'"></small>
+                            </p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div th:if="${currentExpedition == null}" class="empty-state">
-        <p>No active expedition today. Time to plan a new one!</p>
+        <button class="nav-arrow right" id="rightArrow" onclick="scrollGrid(1)">❯</button>
     </div>
 </div>
+
+<th:block layout:fragment="scripts">
+    <script th:inline="javascript">
+        // --- 1. Horizontal Slider Logic ---
+        function scrollGrid(direction) {
+            const viewport = document.getElementById('viewport');
+            const scrollAmount = viewport.clientWidth * 0.8;
+            viewport.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        // --- 2. Weather Emoji Logic ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataInput = document.getElementById('emoji-list-data');
+            const emojiDisplay = document.getElementById('emoji-display');
+            if (dataInput && emojiDisplay) {
+                const emojiList = dataInput.value.split(',');
+                if (emojiList.length > 1) {
+                    let currentIndex = 0;
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % emojiList.length;
+                        emojiDisplay.style.opacity = 0;
+                        setTimeout(() => {
+                            emojiDisplay.textContent = emojiList[currentIndex];
+                            emojiDisplay.style.opacity = 1;
+                        }, 300);
+                    }, 3000);
+                }
+            }
+        });
+    </script>
+</th:block>
 
 <div layout:fragment="page-footer">
 
