@@ -533,6 +533,16 @@ footer {
     cursor: default;
 }
 
+.polaroid.compact {
+    min-height: auto; /* Allow it to be short */
+    padding-bottom: 10px; /* Tighter padding */
+    background-color: #fff9c4; /* Optional: Slight yellow like a sticky note */
+}
+
+.polaroid.compact .polaroid-caption {
+    padding-top: 10px;
+}
+
 /* Give each card a slightly different tilt for a "messy" look */
 .polaroid:nth-child(odd) { transform: rotate(-2deg); }
 .polaroid:nth-child(even) { transform: rotate(1.5deg); }
