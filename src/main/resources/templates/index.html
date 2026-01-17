@@ -2,32 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}" lang="de">
+<head>
+    <title>Dashboard</title>
+</head>
 <body>
-<div layout:fragment="page-header" class="header-wrapper">
 
+<div layout:fragment="page-header" class="header-wrapper">
     <a th:if="${currentExpedition != null}"
        th:href="@{/expedition/overview/{id}(id=${currentExpedition.id})}"
        class="banner-link">
-
         <div class="summer-header">
             <div class="weather-float" id="weather-banner"
-                 th:if="${currentExpedition != null and not #sets.isEmpty(currentExpedition.typicalWeather)}">
-
-                <input type="hidden" id="emoji-list-data"
-                       th:value="${currentExpedition.getWeatherEmojisString()}" />
-
-                <span class="weather-emoji" id="emoji-display"
-                      th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
+                 th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}">
+                <input type="hidden" id="emoji-list-data" th:value="${currentExpedition.getWeatherEmojisString()}" />
+                <span class="weather-emoji" id="emoji-display" th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
             </div>
-
             <div class="banner-text">
                 <h2>Active Adventure:</h2>
-                <h1 th:text="${currentExpedition.name}">Summer Mornings</h1>
+                <h1 th:text="${currentExpedition.name}">Expedition Name</h1>
                 <p th:text="${#temporals.format(currentExpedition.startDate, 'dd.MM')} + ' to ' + ${#temporals.format(currentExpedition.endDate, 'dd.MM')}"></p>
             </div>
         </div>
     </a>
-
     <div th:if="${currentExpedition == null}" class="summer-header">
         <div class="banner-text">
             <h2>Welcome!</h2>
@@ -37,27 +33,23 @@
 </div>
 
 <div layout:fragment="page-content">
-    <h2 class="hand-drawn-title" th:if="${currentExpedition != null}"
-        th:text="${currentExpedition.name}">Current Expedition</h2>
+    <h2 class="hand-drawn-title" th:if="${currentExpedition != null}" th:text="${currentExpedition.name}"></h2>
 
     <div th:if="${#lists.isEmpty(ideas)}" class="empty-state">
         <p>No ideas scheduled for today. Time to plan an adventure!</p>
     </div>
 
     <div class="slider-container" th:if="${not #lists.isEmpty(ideas)}">
-        <button class="nav-arrow left" id="leftArrow" onclick="scrollGrid(-1)">❮</button>
+        <button class="nav-arrow left" onclick="scrollGrid(-1)">❮</button>
 
         <div class="polaroid-viewport" id="viewport">
-            <div class="polaroid-grid">
+            <div class="polaroid-grid" id="mainGrid">
                 <div th:each="idea : ${ideas}"
                      class="polaroid"
                      th:classappend="${idea.photoPath == null} ? 'compact' : ''">
-
-                    <div class="time-marker" th:attr="data-time=${#temporals.format(idea.startTime, 'HH:mm')}"></div>
-
                     <a th:href="@{/idea/edit/{id}(id=${idea.id})}" class="polaroid-link">
                         <div class="photo-container" th:if="${idea.photoPath != null}">
-                            <img th:src="@{'/uploads/' + ${idea.photoPath}}" alt="Idea Photo">
+                            <img th:src="@{'/uploads/' + ${idea.photoPath}}" alt="Photo">
                         </div>
                         <div class="polaroid-caption">
                             <h3 th:text="${idea.title}">Title</h3>
@@ -72,23 +64,79 @@
             </div>
         </div>
 
-        <button class="nav-arrow right" id="rightArrow" onclick="scrollGrid(1)">❯</button>
+        <button class="nav-arrow right" onclick="scrollGrid(1)">❯</button>
     </div>
+</div>
+
+<div layout:fragment="page-footer">
+    <div th:replace="~{fragments/actions :: bottom-buttons}"></div>
 </div>
 
 <th:block layout:fragment="scripts">
     <script th:inline="javascript">
-        // --- 1. Horizontal Slider Logic ---
+        // Slider Logic
         function scrollGrid(direction) {
             const viewport = document.getElementById('viewport');
-            const scrollAmount = viewport.clientWidth * 0.8;
-            viewport.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+            // Scroll by roughly 2 items at a time
+            const scrollAmount = 400;
+
+            viewport.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
         }
 
-        // --- 2. Weather Emoji Logic ---
+        // Timeline and Emojis Logic
         document.addEventListener('DOMContentLoaded', function() {
             const dataInput = document.getElementById('emoji-list-data');
             const emojiDisplay = document.getElementById('emoji-display');
+            const grid = document.getElementById('mainGrid');
+
+            function scrollGrid(direction) {
+                const viewport = document.getElementById('viewport');
+                // Scroll by exactly 300 pixels per click
+                viewport.scrollBy({
+                    left: direction * 300,
+                    behavior: 'smooth'
+                });
+            }
+
+            function updateTimeLine() {
+                const container = document.querySelector('.slider-container');
+                if (!container) return;
+
+                let line = document.getElementById('time-progress-line');
+                if (!line) {
+                    line = document.createElement('div');
+                    line.id = 'time-progress-line';
+                    container.appendChild(line);
+                }
+
+                const now = new Date();
+                const startHour = 8; // 8:00
+                const endHour = 22;  // 22:00
+
+                const totalMinutes = (endHour - startHour) * 60;
+                const currentMinutes = ((now.getHours() - startHour) * 60) + now.getMinutes();
+
+                let progress = currentMinutes / totalMinutes;
+                progress = Math.max(0, Math.min(1, progress));
+
+                // Place the line relative to the visible slider container
+                const containerWidth = container.offsetWidth;
+                line.style.left = (progress * containerWidth) + 'px';
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                updateTimeLine();
+                setInterval(updateTimeLine, 60000); // Update every minute
+            });
+
+// Update every minute
+            setInterval(updateTimeLine, 60000);
+            updateTimeLine();
+
+            // --- Emoji Animation ---
             if (dataInput && emojiDisplay) {
                 const emojiList = dataInput.value.split(',');
                 if (emojiList.length > 1) {
@@ -103,44 +151,13 @@
                     }, 3000);
                 }
             }
+
+            // Init Timeline
+            updateTimeLine();
+            setInterval(updateTimeLine, 60000);
         });
     </script>
 </th:block>
 
-<div layout:fragment="page-footer">
-
-    <div th:replace="~{fragments/actions :: bottom-buttons}"></div>
-
-    <th:block layout:fragment="scripts">
-        <script th:inline="javascript">
-            document.addEventListener('DOMContentLoaded', function() {
-                const dataInput = document.getElementById('emoji-list-data');
-                const emojiDisplay = document.getElementById('emoji-display');
-
-                if (dataInput && emojiDisplay) {
-                    const emojisRaw = dataInput.value;
-                    if (emojisRaw) {
-                        const emojiList = emojisRaw.split(',');
-
-                        if (emojiList.length > 1) {
-                            let currentIndex = 0;
-                            setInterval(() => {
-                                currentIndex = (currentIndex + 1) % emojiList.length;
-
-                                emojiDisplay.style.opacity = 0;
-                                setTimeout(() => {
-                                    emojiDisplay.textContent = emojiList[currentIndex];
-                                    emojiDisplay.style.opacity = 1;
-                                }, 300);
-                            }, 3000);
-                        }
-                    }
-                }
-            });
-        </script>
-    </th:block>
-</div>
 </body>
 </html>
-
-

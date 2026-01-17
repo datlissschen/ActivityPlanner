@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
 :root {
+    --polaroid-width: 180px;
     --font-hand: 'Patrick Hand', cursive, sans-serif;
     --color-paper: #f4eddf; /* Approximate cream color from image */
     --color-ink: #333333;
@@ -516,12 +517,38 @@ footer {
 }
 
 /* The Container Grid */
-/* The actual row of cards */
 .polaroid-grid {
-    display: flex; /* Changed from grid to flex for horizontal layout */
-    gap: 25px;
-    padding: 10px 40px;
-    width: max-content; /* Ensure the row doesn't wrap */
+    min-width: 100%;
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap; /* Force them to stay in one single long line */
+    gap: 30px;
+    padding: 0 60px; /* Space so the first/last card isn't touching the arrows */
+    width: max-content;
+}
+
+#time-progress-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #ff4757; /* Marker Red */
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+    z-index: 100;
+    pointer-events: none;
+}
+
+#time-progress-line::after {
+    content: 'NOW';
+    position: absolute;
+    top: -20px;
+    left: -15px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: bold;
 }
 
 /* Navigation Arrows in your hand-drawn style */
@@ -547,18 +574,25 @@ footer {
 
 /* The Polaroid Card */
 .polaroid {
-    background: #ffffff;
-    padding: 15px 15px 40px 15px; /* Bottom padding is larger for the caption */
-    box-shadow: 8px 8px 20px rgba(0,0,0,0.15);
     border: 1px solid #e0e0e0;
-    transition: transform 0.3s ease-in-out;
     cursor: default;
+    background: white;
+    padding: 10px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    display: inline-block;
+    vertical-align: top;
+    white-space: normal; /* Allow text inside to wrap normally */
+    transition: transform 0.2s;
+    flex: 0 0 200px;
+    width: 200px;
 }
 
 .polaroid.compact {
-    min-height: auto; /* Allow it to be short */
     padding-bottom: 10px; /* Tighter padding */
-    background-color: #fff9c4; /* Optional: Slight yellow like a sticky note */
+    min-height: 180px;
+    background-color: #fff9c4;
+    flex: 0 0 150px; /* Compact ones stay 150px wide, never smaller */
+    width: 150px;
 }
 
 .polaroid.compact .polaroid-caption {
@@ -776,19 +810,53 @@ a:hover {
 /* The container that holds the arrows and the grid */
 .slider-container {
     position: relative;
+    width: 100%;
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 20px 0;
+    overflow: hidden; /* This hides the cards that are 'waiting' to be scrolled into view */
+    padding: 40px 0;
 }
 
 .polaroid-viewport {
-    overflow-x: auto; /* Allow touch scrolling */
     overflow-y: hidden;
-    scroll-behavior: smooth;
+    white-space: nowrap; /* Prevent items from ever wrapping to a new line */
+    padding: 20px 0;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
     width: 100%;
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    overflow-x: hidden; /* We handle scrolling via JS, so hide the scrollbar */
+    scroll-behavior: smooth;
 }
+
 .polaroid-viewport::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome/Safari */
+    display: none; /* Hide scrollbar Chrome/Safari */
+}
+/* The 'Now' line stays fixed in the container */
+#time-progress-line {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    background-color: #ff4757;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.8);
+}
+
+#time-progress-line::after {
+    content: 'NOW';
+    position: absolute;
+    top: -25px;
+    left: -15px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Ensure the container is positioned relatively for the line */
+.slider-container {
+    position: relative;
+    overflow: visible;
 }
