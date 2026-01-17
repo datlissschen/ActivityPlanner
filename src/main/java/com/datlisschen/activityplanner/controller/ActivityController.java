@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -43,17 +44,21 @@ public class ActivityController {
         LocalDate today = LocalDate.now();
         List<Expedition> expeditions = expeditionService.getAllExpeditions();
 
-        // Find the current active trip
         Expedition currentExpedition = expeditions.stream()
                 .filter(e -> (today.isEqual(e.getStartDate()) || today.isAfter(e.getStartDate())) &&
                         (today.isEqual(e.getEndDate()) || today.isBefore(e.getEndDate())))
                 .findFirst()
                 .orElse(null);
 
-        // Get ideas only for the active trip
-        List<ActivityIdea> filteredIdeas = (currentExpedition != null)
-                ? activityService.getIdeasByExpedition(currentExpedition.getId())
-                : Collections.emptyList();
+        List<ActivityIdea> filteredIdeas = Collections.emptyList();
+
+        if (currentExpedition != null) {
+            filteredIdeas = activityService.getIdeasByExpedition(currentExpedition.getId());
+
+            // Sorts by startTime (nulls go to the end)
+            filteredIdeas.sort(Comparator.comparing(ActivityIdea::getStartTime,
+                    Comparator.nullsLast(Comparator.naturalOrder())));
+        }
 
         model.addAttribute("currentExpedition", currentExpedition);
         model.addAttribute("ideas", filteredIdeas);
@@ -126,29 +131,30 @@ public class ActivityController {
     @PostMapping("/idea/update")
     public String updateIdea(@ModelAttribute ActivityIdea idea,
                              @RequestParam(value = "photoFile", required = false) MultipartFile photoFile,
-                             RedirectAttributes redirectAttributes) { // Added RedirectAttributes here
+                             RedirectAttributes redirectAttributes) {
+
+        ActivityIdea existingIdea = activityService.getIdeaById(idea.getId());
 
         if (photoFile != null && !photoFile.isEmpty()) {
             String filename = storageService.store(photoFile);
             idea.setPhotoPath(filename);
+        } else {
+            // Keep the old photo if no new one is uploaded
+            idea.setPhotoPath(existingIdea.getPhotoPath());
         }
-
-        // Save locally
-        activityService.saveIdea(idea);
+        idea.setGoogleEventId(existingIdea.getGoogleEventId());
 
         // Sync to Google
         String eventId = googleCalendarService.addIdeaToCalendar(idea);
-
         if (eventId != null) {
             idea.setGoogleEventId(eventId);
             idea.setLastSyncedAt(LocalDateTime.now());
-            // Save again to store the Google ID and timestamp
-            activityService.saveIdea(idea);
-            redirectAttributes.addFlashAttribute("message", "Idea updated and synced successfully!");
+            redirectAttributes.addFlashAttribute("message", "Calendar entry moved to the new time!");
         } else {
             redirectAttributes.addFlashAttribute("message", "Idea updated locally!");
         }
-
+        // Save locally
+        activityService.saveIdea(idea);
         return "redirect:/";
     }
 
