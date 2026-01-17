@@ -55,7 +55,6 @@ public class ActivityController {
         if (currentExpedition != null) {
             filteredIdeas = activityService.getIdeasByExpedition(currentExpedition.getId());
 
-            // --- SORTING LOGIC ---
             // Sorts by startTime (nulls go to the end)
             filteredIdeas.sort(Comparator.comparing(ActivityIdea::getStartTime,
                     Comparator.nullsLast(Comparator.naturalOrder())));
