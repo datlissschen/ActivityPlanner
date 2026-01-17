@@ -4,7 +4,70 @@
       layout:decorate="~{layout/base}" lang="de">
 <head>
     <title>Dashboard</title>
+
+    <!-- SLIDER-SPECIFIC FIXES -->
+    <style>
+        /* ===== Slider layout ===== */
+        .slider-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 60px;
+            overflow: hidden; /* ⬅️ prevents spill */
+        }
+
+        .polaroid-viewport {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .polaroid-grid {
+            display: flex;
+            gap: 20px;
+            width: max-content;
+            padding: 20px 0;
+        }
+
+        .polaroid {
+            flex: 0 0 190px;
+            scroll-snap-align: center;
+        }
+        /* 1. Define the Scrollbar Area */
+        .polaroid-viewport::-webkit-scrollbar {
+            height: 12px; /* Horizontal height */
+        }
+
+        /* 2. The Track: Look like a dashed 'travel path' */
+        .polaroid-viewport::-webkit-scrollbar-track {
+            background: transparent;
+            border-top: 2px dashed #333; /* The dashed line look */
+            margin: 0 60px; /* Aligns with your card padding */
+        }
+
+        /* 3. The Handle (Thumb): Look like a piece of washi tape */
+        .polaroid-viewport::-webkit-scrollbar-thumb {
+            background-color: #a2b8c9; /* Match your banner blue */
+            border: 2px solid #333;
+            border-radius: 5px;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .polaroid-viewport::-webkit-scrollbar-thumb:hover {
+            background-color: #ffeb3b; /* Pops yellow on hover */
+        }
+
+        /* Firefox Specific (More limited) */
+        .polaroid-viewport {
+            scrollbar-color: #a2b8c9 transparent;
+            scrollbar-width: thin;
+        }
+    </style>
 </head>
+
 <body>
 
 <div layout:fragment="page-header" class="header-wrapper">
@@ -12,59 +75,37 @@
        th:href="@{/expedition/overview/{id}(id=${currentExpedition.id})}"
        class="banner-link">
         <div class="summer-header">
-            <div class="weather-float" id="weather-banner"
-                 th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}">
-                <input type="hidden" id="emoji-list-data" th:value="${currentExpedition.getWeatherEmojisString()}" />
-                <span class="weather-emoji" id="emoji-display" th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
+            <div class="weather-float" th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}">
+                <span class="weather-emoji"
+                      th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
             </div>
             <div class="banner-text">
                 <h2>Active Adventure:</h2>
                 <h1 th:text="${currentExpedition.name}">Expedition Name</h1>
-                <p th:text="${#temporals.format(currentExpedition.startDate, 'dd.MM')} + ' to ' + ${#temporals.format(currentExpedition.endDate, 'dd.MM')}"></p>
             </div>
         </div>
     </a>
-    <div th:if="${currentExpedition == null}" class="summer-header">
-        <div class="banner-text">
-            <h2>Welcome!</h2>
-            <h1>Create your first Expedition</h1>
-        </div>
-    </div>
 </div>
 
 <div layout:fragment="page-content">
-    <h2 class="hand-drawn-title" th:if="${currentExpedition != null}" th:text="${currentExpedition.name}"></h2>
-
-    <div th:if="${#lists.isEmpty(ideas)}" class="empty-state">
-        <p>No ideas scheduled for today. Time to plan an adventure!</p>
-    </div>
-
-    <div class="slider-container" th:if="${not #lists.isEmpty(ideas)}">
-        <button class="nav-arrow left" onclick="scrollGrid(-1)">❮</button>
+    <div class="slider-container">
 
         <div class="polaroid-viewport" id="viewport">
-            <div class="polaroid-grid" id="mainGrid">
+            <div class="polaroid-grid">
                 <div th:each="idea : ${ideas}"
                      class="polaroid"
                      th:classappend="${idea.photoPath == null} ? 'compact' : ''">
                     <a th:href="@{/idea/edit/{id}(id=${idea.id})}" class="polaroid-link">
                         <div class="photo-container" th:if="${idea.photoPath != null}">
-                            <img th:src="@{'/uploads/' + ${idea.photoPath}}" alt="Photo">
+                            <img th:src="@{'/uploads/' + ${idea.photoPath}}">
                         </div>
                         <div class="polaroid-caption">
                             <h3 th:text="${idea.title}">Title</h3>
-                            <p th:if="${idea.place != null and idea.place != ''}" th:text="'📍 ' + ${idea.place}"></p>
-                            <p th:if="${idea.startTime != null}" class="time-range">
-                                🕒 <span th:text="${#temporals.format(idea.startTime, 'HH:mm')}"></span>
-                                <small th:text="'(' + ${idea.getDurationFormatted()} + ')'"></small>
-                            </p>
                         </div>
                     </a>
                 </div>
             </div>
         </div>
-
-        <button class="nav-arrow right" onclick="scrollGrid(1)">❯</button>
     </div>
 </div>
 
@@ -73,47 +114,72 @@
 </div>
 
 <th:block layout:fragment="scripts">
-    <script th:inline="javascript">
-        // Slider Logic
-        function scrollGrid(direction) {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
             const viewport = document.getElementById('viewport');
-            // Scroll by roughly 2 items at a time
-            const scrollAmount = 400;
+            const cards = viewport.querySelectorAll('.polaroid');
 
-            viewport.scrollBy({
-                left: direction * scrollAmount,
-                behavior: 'smooth'
+            if (!viewport || cards.length === 0) return;
+
+            const gap = 20;
+            let cardWidth = cards[0].offsetWidth + gap;
+
+            function scrollOne(dir) {
+                viewport.scrollBy({ left: dir * cardWidth, behavior: 'smooth' });
+            }
+
+            window.addEventListener('resize', () => {
+                cardWidth = cards[0].offsetWidth + gap;
             });
-        }
 
-        // Timeline and Emojis Logic
-        document.addEventListener('DOMContentLoaded', function() {
-            const dataInput = document.getElementById('emoji-list-data');
-            const emojiDisplay = document.getElementById('emoji-display');
-            const grid = document.getElementById('mainGrid');
+            /* ===== Kinetic drag ===== */
+            let down = false, startX, startScroll, velocity = 0, raf;
 
-            function scrollGrid(direction) {
-                const viewport = document.getElementById('viewport');
-                // Scroll by exactly 300 pixels per click
-                viewport.scrollBy({
-                    left: direction * 300,
-                    behavior: 'smooth'
-                });
+            viewport.addEventListener('pointerdown', e => {
+                down = true;
+                startX = e.clientX;
+                startScroll = viewport.scrollLeft;
+                velocity = 0;
+                viewport.style.scrollBehavior = 'auto';
+                cancelAnimationFrame(raf);
+            });
+
+            viewport.addEventListener('pointermove', e => {
+                if (!down) return;
+                const dx = startX - e.clientX;
+                velocity = dx;
+                viewport.scrollLeft = startScroll + dx;
+            });
+
+            viewport.addEventListener('pointerup', release);
+            viewport.addEventListener('pointerleave', release);
+
+            function release() {
+                if (!down) return;
+                down = false;
+                viewport.style.scrollBehavior = 'smooth';
+                momentum();
+            }
+
+            function momentum() {
+                velocity *= 0.92;
+                viewport.scrollLeft += velocity;
+                if (Math.abs(velocity) > 0.5) raf = requestAnimationFrame(momentum);
             }
 
             function updateTimeLine() {
-                const container = document.querySelector('.slider-container');
-                if (!container) return;
+                const grid = document.getElementById('mainGrid');
+                if (!grid) return;
 
                 let line = document.getElementById('time-progress-line');
                 if (!line) {
                     line = document.createElement('div');
                     line.id = 'time-progress-line';
-                    container.appendChild(line);
+                    grid.appendChild(line);
                 }
 
                 const now = new Date();
-                const startHour = 8; // 8:00
+                const startHour = 8; // 08:00
                 const endHour = 22;  // 22:00
 
                 const totalMinutes = (endHour - startHour) * 60;
@@ -122,39 +188,12 @@
                 let progress = currentMinutes / totalMinutes;
                 progress = Math.max(0, Math.min(1, progress));
 
-                // Place the line relative to the visible slider container
-                const containerWidth = container.offsetWidth;
-                line.style.left = (progress * containerWidth) + 'px';
+                // Place the line relative to the TOTAL width of the scrollable strip
+                line.style.left = (progress * 100) + "%";
             }
 
-            document.addEventListener('DOMContentLoaded', () => {
-                updateTimeLine();
-                setInterval(updateTimeLine, 60000); // Update every minute
-            });
-
-// Update every minute
             setInterval(updateTimeLine, 60000);
             updateTimeLine();
-
-            // --- Emoji Animation ---
-            if (dataInput && emojiDisplay) {
-                const emojiList = dataInput.value.split(',');
-                if (emojiList.length > 1) {
-                    let currentIndex = 0;
-                    setInterval(() => {
-                        currentIndex = (currentIndex + 1) % emojiList.length;
-                        emojiDisplay.style.opacity = 0;
-                        setTimeout(() => {
-                            emojiDisplay.textContent = emojiList[currentIndex];
-                            emojiDisplay.style.opacity = 1;
-                        }, 300);
-                    }, 3000);
-                }
-            }
-
-            // Init Timeline
-            updateTimeLine();
-            setInterval(updateTimeLine, 60000);
         });
     </script>
 </th:block>
