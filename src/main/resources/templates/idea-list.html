@@ -4,52 +4,58 @@
       layout:decorate="~{layout/base}" lang="de">
 <body>
 
-<div layout:fragment="page-content">
+<div layout:fragment="page-content" class="overview-container">
     <div class="list-header">
-        <h1 class="hand-drawn-title">Inspiration Gallery</h1>
-
+        <h1 class="hand-drawn-title">🎒 Inspiration Gallery</h1>
         <a th:href="@{/}" class="pill-btn secondary">⬅ Back to Home</a>
     </div>
 
     <form th:action="@{/idea/list}" method="get" class="search-container">
         <label>
             <input type="text" name="search" th:value="${searchQuery}"
-                   placeholder="Search by title, place, or info..." class="search-input">
+                   placeholder="Search for ideas, places, or descriptions..." class="search-input">
         </label>
         <button type="submit" class="pill-btn">🔍 Search</button>
         <a th:href="@{/idea/list}" class="pill-btn secondary" th:if="${searchQuery}">Clear</a>
     </form>
-    <div class="polaroid-grid">
-        <div th:each="idea : ${ideas}" class="polaroid">
-            <a th:href="@{'/idea/edit/' + ${idea.id}}" class="polaroid-link">
-                <div class="photo-container">
-                    <img th:if="${idea.photoPath != null}"
-                         th:src="@{'/uploads/' + ${idea.photoPath}}"
-                         alt="Idea Photo">
-                    <div th:if="${idea.photoPath == null}" class="no-photo">
-                        <span>📷 No Photo</span>
-                    </div>
+
+    <div class="expedition-stack">
+        <div th:each="idea : ${ideas}" class="expedition-strip pink-paper-strip">
+
+            <div class="strip-header">
+                <div class="strip-main-info">
+                    <h2 th:text="${idea.title}">Idea Title</h2>
+                    <span class="strip-location" th:if="${idea.place != null and idea.place != ''}"
+                          th:text="'📍 ' + ${idea.place}"></span>
+                </div>
+                <div class="strip-dates" th:if="${idea.startTime != null}">
+                    <span th:text="${#temporals.format(idea.startTime, 'dd.MM.yyyy HH:mm')}"></span>
+                </div>
+            </div>
+
+            <p class="strip-description" th:if="${idea.description != null}"
+               th:text="${idea.description}">Description text...</p>
+
+            <div class="strip-footer">
+                <div class="mini-tags">
+                    <span th:each="exp : ${idea.expeditions}"
+                          th:text="${exp.name}"
+                          class="mini-tag blue-tag"></span>
                 </div>
 
-                <div class="polaroid-caption">
-                    <h3 th:text="${idea.title}">Title</h3>
-                    <p th:if="${idea.place != null}" th:text="'📍 ' + ${idea.place}"></p>
-
-                    <div class="card-tags">
-                        <span th:each="exp : ${idea.expeditions}"
-                              th:text="${exp.name}" class="mini-tag"></span>
-                    </div>
+                <div class="strip-actions">
+                    <a th:href="@{'/idea/edit/' + ${idea.id}}" class="pill-btn">✏️ Edit Idea</a>
                 </div>
-            </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(ideas)}" class="empty-state">
+            <p>Your gallery is empty. Add your first idea to begin!</p>
+            <a th:href="@{/idea/new}" class="pill-btn">⊕ Add Idea</a>
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(ideas)}" class="empty-state">
-        <p>Your gallery is empty. Start by adding a new activity idea!</p>
-        <a th:href="@{/idea/new}" class="pill-btn">⊕ Add Idea</a>
-    </div>
-
-    <div class="form-actions" style="margin: 40px 0;">
+    <div class="form-actions" style="margin-top: 30px;">
         <a th:href="@{/}" class="pill-btn secondary">Back to Dashboard</a>
     </div>
 </div>

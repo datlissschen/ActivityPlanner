@@ -792,3 +792,50 @@ a:hover {
     width: max-content; /* Critical: The grid must be wider than the viewport */
 }
 
+
+/* --- Idea Strip specific colors --- */
+.pink-paper-strip {
+    background: #fff0f3 !important; /* Soft Pink color */
+    border-left: 8px solid #ff80ab !important; /* Stronger pink accent line */
+    border-radius: 5px 15px 5px 10px / 10px 5px 15px 5px;
+    margin-bottom: 20px;
+}
+
+.strip-main-info {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.strip-location {
+    font-size: 1.1rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* --- Strip Footer Layout --- */
+.strip-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+}
+
+.mini-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mini-tag.blue-tag {
+    background: var(--color-blue-banner);
+    color: var(--color-ink);
+    font-weight: bold;
+    border: 1px solid var(--color-ink);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+}
+
