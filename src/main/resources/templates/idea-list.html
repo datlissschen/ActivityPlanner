@@ -7,7 +7,7 @@
 <div layout:fragment="page-content" class="overview-container">
     <div class="list-header">
         <h1 class="hand-drawn-title">🎒 Inspiration Gallery</h1>
-        <a th:href="@{/}" class="pill-btn secondary">⬅ Back to Home</a>
+        <a th:href="@{/}" class="pill-btn secondary">⬅ Home</a>
     </div>
 
     <form th:action="@{/idea/list}" method="get" class="search-container">
@@ -15,7 +15,7 @@
             <input type="text" name="search" th:value="${searchQuery}"
                    placeholder="Search for ideas, places, or descriptions..." class="search-input">
         </label>
-        <button type="submit" class="pill-btn">🔍 Search</button>
+        <button type="submit" class="pill-btn">🔍 </button>
         <a th:href="@{/idea/list}" class="pill-btn secondary" th:if="${searchQuery}">Clear</a>
     </form>
 
@@ -53,10 +53,6 @@
             <p>Your gallery is empty. Add your first idea to begin!</p>
             <a th:href="@{/idea/new}" class="pill-btn">⊕ Add Idea</a>
         </div>
-    </div>
-
-    <div class="form-actions" style="margin-top: 30px;">
-        <a th:href="@{/}" class="pill-btn secondary">Back to Dashboard</a>
     </div>
 </div>
 
