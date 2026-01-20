@@ -3,7 +3,7 @@
 
 
 :root {
-    --polaroid-width: 180px;
+    --polaroid-width: 160px;
     --font-hand: 'Patrick Hand', cursive, sans-serif;
     --color-paper: #f4eddf; /* Approximate cream color from image */
     --color-ink: #333333;
@@ -18,7 +18,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 0;
+    padding: 10px 0;
 }
 
 /* Remove default link styling from the banner */
@@ -34,7 +34,7 @@ main {
     display: flex;           /* Switch back to flex for centered cards */
     flex-wrap: wrap;         /* Allows cards to move to the next line on laptops */
     justify-content: center;
-    gap: 40px;
+    gap: 30px;
     width: 100%;
 }
 
@@ -43,7 +43,7 @@ main {
     display: flex;
     align-items: center; /* Vertically aligns the emoji with the middle of the banner */
     justify-content: flex-start;
-    gap: 10px;           /* Minimal space between the banner and emoji */
+    gap: 8px;           /* Minimal space between the banner and emoji */
     margin-left: 5%;     /* Moves the whole group to the left side */
     width: fit-content;  /* Ensures the 'gap' doesn't stretch */
 }
@@ -54,13 +54,13 @@ main {
     top: 5px;         /* Nudges it slightly ABOVE the banner edge */
     left: 5px;        /* Nudges it slightly to the LEFT of the banner edge */
 
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: transparent;
-    border: 2px dashed var(--color-ink);
+    border: 1px dashed var(--color-ink);
     border-radius: 50%;
     z-index: 10;        /* Ensures it sits on top of the banner and the 'tape' accent */
 
@@ -69,7 +69,7 @@ main {
 }
 
 .weather-emoji {
-    font-size: 2.2rem;         /* Scaled down to fit the smaller 60px circle */
+    font-size: 2rem;         /* Scaled down to fit the smaller 60px circle */
     display: block;
     filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.05));
 }
@@ -105,12 +105,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .container-1080p {
     width: 95%;            /* Use most of the screen width */
-    max-width: 1800px;     /* Prevents it from becoming too wide on huge monitors */
+    max-width: 1600px;     /* Prevents it from becoming too wide on huge monitors */
     min-height: 90vh;      /* Takes up 90% of the vertical space */
     margin: 0 auto;        /* Centers the container */
     position: relative;
@@ -124,15 +124,15 @@ body {
 .hand-drawn-btn {
     font-family: var(--font-hand);
     background: var(--color-btn-gray);
-    border: 2px solid var(--color-ink);
-    border-radius: 30px;
-    padding: 0.8rem 2rem;
-    font-size: 1.5rem;
+    border: 1px solid var(--color-ink);
+    border-radius: 25px;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    box-shadow: 1px 3px 0 rgba(0,0,0,0.1);
     transition: transform 0.1s;
 }
 
@@ -295,14 +295,14 @@ footer {
     min-width: 450px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 35px 50px;
+    margin: 20px auto 15px 15%;
+    padding: 20px 40px;
     background-color: var(--color-blue-card);
     border: 3px solid var(--color-ink);
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     z-index: 2;
     /* Change 'auto' for the left margin to a specific value */
     /* top | right | bottom | left */
-    margin: 40px auto 40px 15%;
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
 }
