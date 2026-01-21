@@ -3,7 +3,7 @@
 
 
 :root {
-    --polaroid-width: 160px;
+    --polaroid-width: 140px;
     --font-hand: 'Patrick Hand', cursive, sans-serif;
     --color-paper: #f4eddf; /* Approximate cream color from image */
     --color-ink: #333333;
@@ -18,7 +18,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 30px 0;
+    padding: 8px 0;
 }
 
 /* Remove default link styling from the banner */
@@ -34,7 +34,7 @@ main {
     display: flex;           /* Switch back to flex for centered cards */
     flex-wrap: wrap;         /* Allows cards to move to the next line on laptops */
     justify-content: center;
-    gap: 30px;
+    gap: 25px;
     width: 100%;
 }
 
@@ -51,11 +51,10 @@ main {
 /* --- The sticker pinned to the top-left --- */
 .weather-float {
     position: absolute; /* Changes it from 'floating next to' to 'pinned inside' */
-    top: 5px;         /* Nudges it slightly ABOVE the banner edge */
-    left: 5px;        /* Nudges it slightly to the LEFT of the banner edge */
-
-    width: 40px;
-    height: 40px;
+    top: 5px;
+    left: 5px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,13 +67,14 @@ main {
 }
 
 .weather-emoji {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 1; /* CRITICAL: Stops the emoji from sitting on its baseline */
+    line-height: 1;
     margin: 0;
     padding: 0;
+    transition: opacity 0.3s ease-in-out;
     text-align: center;
 }
 
@@ -130,7 +130,7 @@ body {
     background: var(--color-btn-gray);
     border: 1px solid var(--color-ink);
     border-radius: 25px;
-    padding: 0.8rem 1rem;
+    padding: 0.8rem 0.8rem;
     font-size: 1rem;
     cursor: pointer;
     display: flex;
@@ -252,11 +252,11 @@ footer {
 /* --- Pill Buttons --- */
 .pill-btn {
     font-family: var(--font-hand);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     background-color: #d6d2c4; /* Light beige/gray from design */
     border: 3px solid var(--color-ink);
     border-radius: 50px; /* Makes it a pill shape */
-    padding: 8px 20px;
+    padding: 5px 15px;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -277,12 +277,12 @@ footer {
 
 /* Icon styling inside buttons */
 .btn-icon {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
@@ -299,14 +299,12 @@ footer {
     min-width: 450px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 35px 50px;
+    margin: 20px auto 20px 15%;
+    padding: 22px 22px;
     background-color: var(--color-blue-card);
     border: 3px solid var(--color-ink);
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     z-index: 2;
-    /* Change 'auto' for the left margin to a specific value */
-    /* top | right | bottom | left */
-    margin: 40px auto 40px 15%;
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
 }
@@ -339,12 +337,12 @@ footer {
 }
 
 .banner-text h1 {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
     margin-top: 5px;
 }
 
 .banner-text h2 {
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-size: clamp(1rem, 2vw, 1.6rem);
     color: #556b7f;
 }
 
