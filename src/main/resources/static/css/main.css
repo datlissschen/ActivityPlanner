@@ -1,7 +1,9 @@
 /* --- CSS Variables & Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
+
 :root {
+    --polaroid-width: 140px;
     --font-hand: 'Patrick Hand', cursive, sans-serif;
     --color-paper: #f4eddf; /* Approximate cream color from image */
     --color-ink: #333333;
@@ -16,7 +18,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 0;
+    padding: 8px 0;
 }
 
 /* Remove default link styling from the banner */
@@ -32,7 +34,7 @@ main {
     display: flex;           /* Switch back to flex for centered cards */
     flex-wrap: wrap;         /* Allows cards to move to the next line on laptops */
     justify-content: center;
-    gap: 40px;
+    gap: 25px;
     width: 100%;
 }
 
@@ -41,7 +43,7 @@ main {
     display: flex;
     align-items: center; /* Vertically aligns the emoji with the middle of the banner */
     justify-content: flex-start;
-    gap: 10px;           /* Minimal space between the banner and emoji */
+    gap: 8px;           /* Minimal space between the banner and emoji */
     margin-left: 5%;     /* Moves the whole group to the left side */
     width: fit-content;  /* Ensures the 'gap' doesn't stretch */
 }
@@ -49,27 +51,31 @@ main {
 /* --- The sticker pinned to the top-left --- */
 .weather-float {
     position: absolute; /* Changes it from 'floating next to' to 'pinned inside' */
-    top: 5px;         /* Nudges it slightly ABOVE the banner edge */
-    left: 5px;        /* Nudges it slightly to the LEFT of the banner edge */
-
-    width: 60px;
-    height: 60px;
+    top: 5px;
+    left: 5px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: transparent;
-    border: 2px dashed var(--color-ink);
+    border: 1px dashed var(--color-ink);
     border-radius: 50%;
-    z-index: 10;        /* Ensures it sits on top of the banner and the 'tape' accent */
-
+    z-index: 10;
     /* Animation stays the same */
     animation: floating 4s ease-in-out infinite, wobble 6s ease-in-out infinite;
 }
 
 .weather-emoji {
-    font-size: 2.2rem;         /* Scaled down to fit the smaller 60px circle */
-    display: block;
-    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.05));
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    transition: opacity 0.3s ease-in-out;
+    text-align: center;
 }
 
 /* Gentle up and down floating */
@@ -103,12 +109,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .container-1080p {
     width: 95%;            /* Use most of the screen width */
-    max-width: 1800px;     /* Prevents it from becoming too wide on huge monitors */
+    max-width: 1600px;     /* Prevents it from becoming too wide on huge monitors */
     min-height: 90vh;      /* Takes up 90% of the vertical space */
     margin: 0 auto;        /* Centers the container */
     position: relative;
@@ -122,15 +128,15 @@ body {
 .hand-drawn-btn {
     font-family: var(--font-hand);
     background: var(--color-btn-gray);
-    border: 2px solid var(--color-ink);
-    border-radius: 30px;
-    padding: 0.8rem 2rem;
-    font-size: 1.5rem;
+    border: 1px solid var(--color-ink);
+    border-radius: 25px;
+    padding: 0.8rem 0.8rem;
+    font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+    box-shadow: 1px 3px 0 rgba(0,0,0,0.1);
     transition: transform 0.1s;
 }
 
@@ -246,11 +252,11 @@ footer {
 /* --- Pill Buttons --- */
 .pill-btn {
     font-family: var(--font-hand);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     background-color: #d6d2c4; /* Light beige/gray from design */
     border: 3px solid var(--color-ink);
     border-radius: 50px; /* Makes it a pill shape */
-    padding: 8px 20px;
+    padding: 5px 15px;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -271,12 +277,12 @@ footer {
 
 /* Icon styling inside buttons */
 .btn-icon {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
@@ -293,14 +299,12 @@ footer {
     min-width: 450px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 35px 50px;
+    margin: 20px auto 20px 15%;
+    padding: 22px 22px;
     background-color: var(--color-blue-card);
     border: 3px solid var(--color-ink);
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     z-index: 2;
-    /* Change 'auto' for the left margin to a specific value */
-    /* top | right | bottom | left */
-    margin: 40px auto 40px 15%;
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
 }
@@ -333,12 +337,12 @@ footer {
 }
 
 .banner-text h1 {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
     margin-top: 5px;
 }
 
 .banner-text h2 {
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-size: clamp(1rem, 2vw, 1.6rem);
     color: #556b7f;
 }
 
@@ -515,22 +519,8 @@ footer {
     flex-grow: 1; /* Makes the whole line clickable */
 }
 
-/* The Container Grid */
-.polaroid-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 40px;
-    padding: 30px;
-}
-
-/* The Polaroid Card */
-.polaroid {
-    background: #ffffff;
-    padding: 15px 15px 40px 15px; /* Bottom padding is larger for the caption */
-    box-shadow: 8px 8px 20px rgba(0,0,0,0.15);
-    border: 1px solid #e0e0e0;
-    transition: transform 0.3s ease-in-out;
-    cursor: default;
+.polaroid.compact .polaroid-caption {
+    padding-top: 10px;
 }
 
 /* Give each card a slightly different tilt for a "messy" look */
@@ -740,3 +730,114 @@ a:hover {
     font-family: 'Courier New', Courier, monospace; /* Gives it a typed-label look */
     font-weight: bold;
 }
+
+#time-progress-line::after {
+    content: 'NOW';
+    position: absolute;
+    top: -25px;
+    left: -15px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+
+
+#time-progress-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #ff4757;
+    z-index: 100;
+    pointer-events: none;
+    /* We will set the 'left' position via JS */
+}
+
+.polaroid {
+    flex: 0 0 190px; /* Fixes width, PREVENTS squishing */
+    width: 190px;
+    height: 260px;   /* Reduced height */
+    background: white;
+    padding: 10px 10px 15px 10px;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
+    border: 1px solid #eee;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: center;
+}
+
+.polaroid.compact {
+    height: 160px;   /* Even shorter for notes */
+    background-color: #fff9c4;
+}
+
+.photo-container {
+    width: 100%;
+    height: 140px;   /* Shorter photo area */
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.polaroid-viewport::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.polaroid-grid {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to a new line */
+    gap: 20px;
+    width: max-content; /* Critical: The grid must be wider than the viewport */
+}
+
+
+/* --- Idea Strip specific colors --- */
+.pink-paper-strip {
+    background: #fff0f3 !important; /* Soft Pink color */
+    border-left: 8px solid #ff80ab !important; /* Stronger pink accent line */
+    border-radius: 5px 15px 5px 10px / 10px 5px 15px 5px;
+    margin-bottom: 20px;
+}
+
+.strip-main-info {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.strip-location {
+    font-size: 1.1rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* --- Strip Footer Layout --- */
+.strip-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+}
+
+.mini-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mini-tag.blue-tag {
+    background: var(--color-blue-banner);
+    color: var(--color-ink);
+    font-weight: bold;
+    border: 1px solid var(--color-ink);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+}
+
