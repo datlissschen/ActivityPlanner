@@ -18,7 +18,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 0;
+    padding: 30px 0;
 }
 
 /* Remove default link styling from the banner */
@@ -62,16 +62,20 @@ main {
     background-color: transparent;
     border: 1px dashed var(--color-ink);
     border-radius: 50%;
-    z-index: 10;        /* Ensures it sits on top of the banner and the 'tape' accent */
-
+    z-index: 10;
     /* Animation stays the same */
     animation: floating 4s ease-in-out infinite, wobble 6s ease-in-out infinite;
 }
 
 .weather-emoji {
-    font-size: 2rem;         /* Scaled down to fit the smaller 60px circle */
-    display: block;
-    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.05));
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* CRITICAL: Stops the emoji from sitting on its baseline */
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
 
 /* Gentle up and down floating */
@@ -295,14 +299,14 @@ footer {
     min-width: 450px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin: 20px auto 15px 15%;
-    padding: 20px 40px;
+    padding: 35px 50px;
     background-color: var(--color-blue-card);
     border: 3px solid var(--color-ink);
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     z-index: 2;
     /* Change 'auto' for the left margin to a specific value */
     /* top | right | bottom | left */
+    margin: 40px auto 40px 15%;
     border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
     box-shadow: 8px 10px 0 rgba(0,0,0,0.05);
 }

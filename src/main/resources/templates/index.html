@@ -75,8 +75,11 @@
        th:href="@{/expedition/overview/{id}(id=${currentExpedition.id})}"
        class="banner-link">
         <div class="summer-header">
-            <div class="weather-float" th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}">
-                <span class="weather-emoji"
+            <div class="weather-float" th:if="${not #sets.isEmpty(currentExpedition.typicalWeather)}" id="weather-banner">
+                <input type="hidden" id="emoji-list-data"
+                       th:value="${currentExpedition.getWeatherEmojisString()}" />
+
+                <span class="weather-emoji" id="emoji-display"
                       th:text="${currentExpedition.typicalWeather.iterator().next().emoji}">🌤️</span>
             </div>
             <div class="banner-text">
@@ -85,6 +88,12 @@
             </div>
         </div>
     </a>
+    <div th:if="${currentExpedition == null}" class="summer-header">
+        <div class="banner-text">
+            <h2>No active adventure</h2>
+            <h1>Start a new Journey!</h1>
+        </div>
+    </div>
 </div>
 
 <div layout:fragment="page-content">
@@ -194,6 +203,28 @@
 
             setInterval(updateTimeLine, 60000);
             updateTimeLine();
+
+            // Weather Emoji Cycling Logic ---
+            const emojiData = document.getElementById('emoji-list-data');
+            const emojiDisplay = document.getElementById('emoji-display');
+
+            if (emojiData && emojiDisplay) {
+                const emojiList = emojiData.value.split(','); // Get list from hidden input
+
+                if (emojiList.length > 1) {
+                    let currentIndex = 0;
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % emojiList.length;
+
+                        emojiDisplay.style.opacity = '0';
+
+                        setTimeout(() => {
+                            emojiDisplay.textContent = emojiList[currentIndex];
+                            emojiDisplay.style.opacity = '1';
+                        }, 300); // Wait for fade out to finish
+                    }, 3000); // Change emoji every 3 seconds
+                }
+            }
         });
     </script>
 </th:block>
