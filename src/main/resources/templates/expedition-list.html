@@ -8,7 +8,7 @@
     <div class="list-header">
         <h1 class="hand-drawn-title">Journal of All Periods</h1>
 
-        <a th:href="@{/}" class="pill-btn secondary">⬅ Back to Home</a>
+        <a th:href="@{/}" class="pill-btn secondary">⬅ Home</a>
     </div>
 
     <form th:action="@{/expedition/list}" method="get" class="search-container">
@@ -16,7 +16,7 @@
             <input type="text" name="search" th:value="${searchQuery}"
                    placeholder="Search by title, place, info or weather..." class="search-input">
         </label>
-        <button type="submit" class="pill-btn">🔍 Search</button>
+        <button type="submit" class="pill-btn">🔍 </button>
         <a th:href="@{/expedition/list}" class="pill-btn secondary" th:if="${searchQuery}">Clear</a>
     </form>
 
@@ -50,10 +50,6 @@
             <p>Your journal is empty. Add your first period to begin!</p>
             <a th:href="@{/expedition/new}" class="pill-btn">⊕ Add Period</a>
         </div>
-    </div>
-
-    <div class="form-actions" style="margin-top: 30px;">
-        <a th:href="@{/}" class="pill-btn secondary">Back to Dashboard</a>
     </div>
 </div>
 
